@@ -1,7 +1,7 @@
 # jc-firefox-settings - JC's Firefox Settings
 ![License](https://img.shields.io/github/license/jamescherti/jc-firefox-settings)
 
-This project provides the `jc-firefox-settings.sh` script, which holds James Cherti's settings to customize the Firefox desktop environment (user.js) to enhance the user experience.
+This project provides the a **user.js* file, which holds James Cherti's settings to customize the Firefox web browser to enhance the user experience and security.
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 ## Table of Contents
