@@ -2,8 +2,6 @@
 // This file is part of the jc-firefox-settings:
 // https://github.com/jamescherti/jc-firefox-settings
 //
-// Copyright (C) 2019-2025 James Cherti
-//
 // Distributed under terms of the MIT license.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
