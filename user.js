@@ -28,6 +28,8 @@ user_pref("extensions.pocket.enabled", false);
 user_pref("extensions.screenshots.disabled", true);
 user_pref("identity.fxaccounts.enabled", false);  // Disable Firefox Sync
 
+// user_pref("browser.sessionstore.resume_session_once", true)
+
 // Disable the shortcut for quitting the browser (e.g., Ctrl+Q)
 user_pref("browser.quitShortcut.disabled", true);
 
