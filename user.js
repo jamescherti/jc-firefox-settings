@@ -28,56 +28,119 @@ user_pref("extensions.pocket.enabled", false);
 user_pref("extensions.screenshots.disabled", true);
 user_pref("identity.fxaccounts.enabled", false);  // Disable Firefox Sync
 
-// Disable displaying:
+// Disable the shortcut for quitting the browser (e.g., Ctrl+Q)
+user_pref("browser.quitShortcut.disabled", true);
+
+// Enable disk cache for storing web content on the disk
+user_pref("browser.cache.disk.enable", true);
+
+// Allow caching of SSL pages on disk
+user_pref("browser.cache.disk_cache_ssl", true);
+
+// Enable usage of enterprise-installed root certificates
+user_pref("security.enterprise_roots.enabled", true);
+
+// UI: Open container tabs on left-click instead of requiring a menu selection
+user_pref("privacy.userContext.newTabContainerOnLeftClick.enabled", true);
+
+// UI: Disable animation for download notifications
+user_pref("browser.download.animateNotifications", false);
+
+// UI: Disable displaying:
 // "You must enable DRM to play some audio or video on this page."
 user_pref("browser.eme.ui.enabled", false);
 
-user_pref("browser.quitShortcut.disabled", true);
-user_pref("browser.cache.disk.enable", true);
-user_pref("browser.cache.disk_cache_ssl", true);
-user_pref("security.enterprise_roots.enabled", true);
-user_pref("privacy.userContext.newTabContainerOnLeftClick.enabled", true);
-user_pref("browser.download.animateNotifications", false);
+// UI: Warn the user when quitting with multiple tabs open
+user_pref("browser.sessionstore.warnOnQuit", true);
 
-// Performance and faster UI
-user_pref("full-screen-api.warning.timeout", 0);    // default: 3000
+// Disable the fullscreen warning timeout (default: 3000ms)
+user_pref("full-screen-api.warning.timeout", 0);
 
-// Prevent Firefox from recommending addons and features while browsing
+// Prevent Firefox from recommending addons while browsing
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
+
+// Prevent Firefox from recommending features while browsing
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
 
+// Session: Restore only the selected tab on session restore to reduce memory usage
 user_pref("browser.sessionstore.restore_on_demand", true);
-user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", false);
-user_pref("browser.sessionstore.warnOnQuit", true);
-user_pref("browser.sessionstore.resume_session_once", true)
-user_pref("browser.tabs.closeWindowWithLastTab", false);
-user_pref("browser.tabs.drawInTitlebar", true);
-user_pref("general.autoScroll", true);  // Controls whether the auto-scrolling feature is enabled
-user_pref("media.autoplay.enabled", false);
-user_pref("mousewheel.acceleration.factor", 2);  // Default: 10
-user_pref("mousewheel.acceleration.start", 0);  // Default: -1
-user_pref("mousewheel.min_line_scroll_amount", 1);  // Default: 5
-user_pref("security.dialog_enable_delay", 1); // Protects from some securtiy attacks.
-user_pref("sidebar.position_start", false);  // Move sidebar to the right
-user_pref("ui.systemUsesDarkTheme", 1);
-user_pref("browser.chrome.toolbar_tips", false);  // disable tool tips
-user_pref("browser.safebrowsing.downloads.remote.block_potentially_unwanted", false);
-user_pref("browser.safebrowsing.downloads.remote.block_uncommon", false);
-user_pref("browser.safebrowsing.malware.enabled", false);
-user_pref("browser.safebrowsing.phishing.enabled", false);
-user_pref("browser.safebrowsing.downloads.enabled", false);
-user_pref("browser.safebrowsing.blockedURIs.enabled", false);
-user_pref("browser.safebrowsing.downloads.remote.block_dangerous", false);
-user_pref("browser.safebrowsing.downloads.remote.block_dangerous_host", false);
-user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 1);
-// TODO: browser.safebrowsing.downloads.remote.enabled
 
-user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);  // Support userChrome.css
+// Session: Always restore pinned tabs on session restore
+user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", false);
+
+// Session: Restore the session only once after the browser restarts
+// user_pref("browser.sessionstore.resume_session_once", true)
+
+// UI: Prevent closing the browser when the last tab is closed
+user_pref("browser.tabs.closeWindowWithLastTab", false);
+
+// Draw browser tabs inside the title bar for a modern UI
+user_pref("browser.tabs.drawInTitlebar", true);
+
+// Enable middle-click auto-scrolling feature
+user_pref("general.autoScroll", true);
+
+// Disable autoplay for media elements
+// user_pref("media.autoplay.enabled", false);  // Deprecated
+// (0 = allow, 1 = block audio, 5 = block all).
+user_pref("media.autoplay.default", 5);
+
+// Set mouse wheel acceleration factor (default: 10)
+user_pref("mousewheel.acceleration.factor", 2);
+
+// Disable mouse wheel acceleration start threshold (default: -1)
+user_pref("mousewheel.acceleration.start", 0);
+
+// Set the minimum scroll amount per mouse wheel tick (default: 5)
+user_pref("mousewheel.min_line_scroll_amount", 1);
+
+// UI: Set a minimal delay before security dialogs appear
+user_pref("security.dialog_enable_delay", 1);
+
+// Move the sidebar to the right side of the window
+user_pref("sidebar.position_start", false);
+
+// Enable dark theme based on system settings
+user_pref("ui.systemUsesDarkTheme", 1);
+
+// Disable tooltips for toolbar buttons
+user_pref("browser.chrome.toolbar_tips", false);
+
+// Enable support for userChrome.css and userContent.css customizations
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+
+// Set the minimum width of a tab before it gets clipped
 user_pref("browser.tabs.tabClipWidth", 300);
 
-/** Misc ***/
-// [SETTING] Privacy & Security>Logins and Passwords>Ask to save logins and passwords for websites ***/
+// Enable Firefox's password manager to remember logins
 user_pref("signon.rememberSignons", true);
+
+// Disable blocking of potentially unwanted software downloads
+// user_pref("browser.safebrowsing.downloads.remote.block_potentially_unwanted", true);
+
+// Disable blocking of uncommon downloads
+// user_pref("browser.safebrowsing.downloads.remote.block_uncommon", true);
+
+// Disable malware protection from Google Safe Browsing
+// user_pref("browser.safebrowsing.malware.enabled", false);
+
+// Disable phishing protection from Google Safe Browsing
+// user_pref("browser.safebrowsing.phishing.enabled", false);
+
+// Disable Safe Browsing for downloads
+// user_pref("browser.safebrowsing.downloads.enabled", false);
+
+// Disable blocking of dangerous URLs via Safe Browsing
+// user_pref("browser.safebrowsing.blockedURIs.enabled", false);
+
+// Disable blocking of dangerous file downloads
+// user_pref("browser.safebrowsing.downloads.remote.block_dangerous", false);
+
+// Disable blocking of dangerous hosts for downloads
+// user_pref("browser.safebrowsing.downloads.remote.block_dangerous_host", false);
+
+// Set Safe Browsing remote lookup timeout to 1ms
+// user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 1);
 
 /* Hardware acceleration */
 // user_pref("media.ffmpeg.vaapi.enabled", true);  // true in order to enable the use of VA-API with FFmpeg
