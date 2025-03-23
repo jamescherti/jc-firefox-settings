@@ -3,17 +3,6 @@
 
 This project provides the a **user.js* file, which holds James Cherti's settings to customize the Firefox web browser to enhance the user experience and security.
 
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-## Table of Contents
-
-- [jc-firefox-settings - JC's Firefox Settings](#jc-firefox-settings---jcs-firefox-settings)
-  - [Requirements](#requirements)
-  - [Usage](#usage)
-  - [Author and License](#author-and-license)
-  - [Links](#links)
-
-<!-- markdown-toc end -->
-
 ## Requirements
 
 - Firefox
