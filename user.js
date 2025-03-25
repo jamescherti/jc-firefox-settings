@@ -105,6 +105,9 @@ user_pref("sidebar.position_start", false);
 // Enable dark theme based on system settings
 user_pref("ui.systemUsesDarkTheme", 1);
 
+// Force websites to use the Light color scheme preference
+user_pref("layout.css.prefers-color-scheme.content-override", 1)
+
 // Disable tooltips for toolbar buttons
 user_pref("browser.chrome.toolbar_tips", false);
 
