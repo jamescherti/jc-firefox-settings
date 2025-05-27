@@ -31,9 +31,6 @@
 // increase the total loading time due to more frequent reflows.
 user_pref("nglayout.initialpaint.delay", 2);
 
-// Disable image placeholders and session history view caching
-user_pref("browser.display.show_image_placeholders", false);
-
 // Setting the session save interval reduces the frequency with which Firefox
 // writes session data (such as open tabs and windows) to disk. This is
 // beneficial for the following reasons: Reduced Disk I/O, Improved Performance,
@@ -63,6 +60,16 @@ user_pref("network.http.speculative-parallel-limit", 0);
 
 // Disable strict tracking protection. I am using extensions such as uBlock
 // Origin as an alternative to these protections.
+
+// Enables tracking protection specifically against email tracking elements
+// (such as tracking pixels) when Firefox is in Private Browsing mode.
+user_pref("privacy.trackingprotection.emailtracking.pbmode.enabled", false);
+
+// Disable enhanced tracking protection for all websites visited while in
+// Private Browsing mode, blocking trackers more aggressively than in normal
+// mode.
+user_pref("privacy.trackingprotection.pbmode.enabled", false);
+
 user_pref("privacy.trackingprotection.enabled", false);
 user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
 user_pref("privacy.trackingprotection.cryptomining.enabled", false);
