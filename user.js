@@ -23,21 +23,86 @@
 // SOFTWARE.
 //
 
+// This preference sets the initial paint delay for Firefox’s rendering engine.
+// It means Firefox will wait before starting to render the content of a web
+// page after receiving the first data from the server. A very low value like 1
+// ms causes Firefox to begin rendering almost immediately, which can make pages
+// appear to load faster visually. However, on slow connections, this might
+// increase the total loading time due to more frequent reflows.
+user_pref("nglayout.initialpaint.delay", 2);
+
+// Disable image placeholders and session history view caching
+user_pref("browser.display.show_image_placeholders", false);
+
+// Setting the session save interval reduces the frequency with which Firefox
+// writes session data (such as open tabs and windows) to disk. This is
+// beneficial for the following reasons: Reduced Disk I/O, Improved Performance,
+// and Power Efficiency.
+user_pref("browser.sessionstore.interval", 40000);
+
+// Enable automatic tab unloading when system memory is low
+user_pref("browser.tabs.unloadOnLowMemory", true);
+
+// Disable prefetching of web pages
+user_pref("network.prefetch-next", false);
+
+// Disable DNS prefetching
+user_pref("network.dns.disablePrefetch", true);
+
+// The preference network.http.speculative-parallel-limit controls the number of
+// speculative (or preemptive) parallel HTTP connections that Firefox is allowed
+// to open to a server when the user hovers over or starts interacting with a
+// link (e.g., typing in the address bar, or mousing over suggestions).
+//
+// Firefox uses speculative connections to reduce perceived latency: it opens
+// TCP connections before the user actually clicks a link, under the assumption
+// that they will visit that site.
+//
+// Setting this value to 0 disables speculative connections entirely.
+user_pref("network.http.speculative-parallel-limit", 0);
+
+// Disable strict tracking protection. I am using extensions such as uBlock
+// Origin as an alternative to these protections.
+user_pref("privacy.trackingprotection.enabled", false);
+user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
+user_pref("privacy.trackingprotection.cryptomining.enabled", false);
+
+// Disable Accessibility Services if unused to reduce memory and CPU usage,
+// improve browser responsiveness, and minimize security risks
+//
+// An example of accessibility services is a **screen reader**, such as **NVDA**
+// (NonVisual Desktop Access) or **JAWS** (Job Access With Speech), which reads
+// aloud the content on the screen for users with visual impairments.
+user_pref("accessibility.force_disabled", 1);
+
+// Recently visited pages are retained in memory to avoid re-parsing, which
+// differs from the standard memory cache. This enhances performance when
+// navigating with the Back and Forward buttons.
+//
+// This preference defines the upper limit on the number of such pages stored in
+// memory.
+user_pref("browser.sessionhistory.max_total_viewers", 4);
+
 // Disable services
 user_pref("extensions.pocket.enabled", false);
 user_pref("extensions.screenshots.disabled", true);
 user_pref("identity.fxaccounts.enabled", false);  // Disable Firefox Sync
+
+// Disable automatic page translation to improve performance, enhance privacy,
+// reduce resource usage, and prevent unwanted translations
+user_pref("browser.translation.enable", false);
 
 // user_pref("browser.sessionstore.resume_session_once", true)
 
 // Disable the shortcut for quitting the browser (e.g., Ctrl+Q)
 user_pref("browser.quitShortcut.disabled", true);
 
-// Enable disk cache for storing web content on the disk
+// Disabling disk cache reduces disk usage and wear, can improve performance on
+// slow or limited storage devices.
 user_pref("browser.cache.disk.enable", true);
 
 // Allow caching of SSL pages on disk
-user_pref("browser.cache.disk_cache_ssl", true);
+// user_pref("browser.cache.disk_cache_ssl", true);
 
 // Enable usage of enterprise-installed root certificates
 user_pref("security.enterprise_roots.enabled", true);
