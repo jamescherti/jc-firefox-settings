@@ -23,13 +23,14 @@
 // SOFTWARE.
 //
 
-// This preference sets the initial paint delay for Firefox’s rendering engine.
-// It means Firefox will wait before starting to render the content of a web
-// page after receiving the first data from the server. A very low value like 1
-// ms causes Firefox to begin rendering almost immediately, which can make pages
-// appear to load faster visually. However, on slow connections, this might
-// increase the total loading time due to more frequent reflows.
-user_pref("nglayout.initialpaint.delay", 2);
+// This preference sets the initial paint delay in milliseconds for Firefox’s
+// rendering engine. It means Firefox will wait before starting to render the
+// content of a web page after receiving the first data from the server. A very
+// low value like 1 ms causes Firefox to begin rendering almost immediately,
+// which can make pages appear to load faster visually. However, on slow
+// connections, this might increase the total loading time due to more frequent
+// reflows. Default: 250
+user_pref("nglayout.initialpaint.delay", 50);
 
 // Setting the session save interval reduces the frequency with which Firefox
 // writes session data (such as open tabs and windows) to disk. This is
