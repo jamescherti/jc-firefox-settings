@@ -26,26 +26,34 @@
 # SOFTWARE.
 #
 
-#!/bin/bash
 set -euf -o pipefail
 
-FIREFOX_DIR="$HOME/.mozilla/firefox"
+LIST_FIREFOX_DIRS=("$HOME/.mozilla/firefox"
+  "$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox")
 
 cp_userjs() {
   local user_js="$1"
 
-  # Find all profile directories containing times.json
-  find "$FIREFOX_DIR" -maxdepth 2 -name "times.json" | while read -r times_json; do
-    local dest_dir
-    dest_dir=$(dirname "$times_json")
-
-    # Check for storage.sqlite
-    if [[ -f "$dest_dir/storage.sqlite" ]]; then
-      echo "[INSTALL] Copying user.js to $dest_dir"
-      cp -v "$user_js" "$dest_dir"
-    else
-      echo "[IGNORED] $dest_dir (no storage.sqlite)"
+  local firefox_dir
+  for firefox_dir in "${LIST_FIREFOX_DIRS[@]}"; do
+    if ! [[ -d "$firefox_dir" ]]; then
+      continue
     fi
+
+    # Find all profile directories containing times.json
+    find "$firefox_dir" -maxdepth 2 -name "times.json" \
+      | while read -r times_json; do
+        local dest_dir
+        dest_dir=$(dirname "$times_json")
+
+        # Check for storage.sqlite
+        if [[ -f "$dest_dir/storage.sqlite" ]]; then
+          echo "[INSTALL] Copying user.js to $dest_dir"
+          cp -v "$user_js" "$dest_dir"
+        else
+          echo "[IGNORED] $dest_dir (no storage.sqlite)"
+        fi
+      done
   done
 }
 
