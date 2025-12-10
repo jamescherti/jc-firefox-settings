@@ -107,7 +107,7 @@ user_pref("browser.quitShortcut.disabled", true);
 
 // Disabling disk cache reduces disk usage and wear, can improve performance on
 // slow or limited storage devices.
-user_pref("browser.cache.disk.enable", true);
+user_pref("browser.cache.disk.enable", false);
 
 // Allow caching of SSL pages on disk
 // user_pref("browser.cache.disk_cache_ssl", true);
