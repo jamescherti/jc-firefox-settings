@@ -3,7 +3,7 @@
 # This file is part of the jc-firefox-settings:
 # https://github.com/jamescherti/jc-firefox-settings
 #
-# Copyright (C) 2019-2025 James Cherti
+# Copyright (C) 2019-2026 James Cherti
 #
 # Distributed under terms of the MIT license.
 #
