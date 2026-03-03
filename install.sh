@@ -50,6 +50,8 @@ cp_userjs() {
         if [[ -f "$dest_dir/storage.sqlite" ]]; then
           echo "[INSTALL] Copying user.js to $dest_dir"
           cp -v "$user_js" "$dest_dir"
+          echo "user_pref(\"dom.ipc.processCount\", $(nproc));" \
+            >>"$dest_dir/user.js"
         else
           echo "[IGNORED] $dest_dir (no storage.sqlite)"
         fi

@@ -30,22 +30,24 @@
 // which can make pages appear to load faster visually. However, on slow
 // connections, this might increase the total loading time due to more frequent
 // reflows. Default: 250
-user_pref("nglayout.initialpaint.delay", 50);
+user_pref("nglayout.initialpaint.delay", 25);
 
 // Setting the session save interval reduces the frequency with which Firefox
 // writes session data (such as open tabs and windows) to disk. This is
 // beneficial for the following reasons: Reduced Disk I/O, Improved Performance,
 // and Power Efficiency.
-user_pref("browser.sessionstore.interval", 40000);
+user_pref("browser.sessionstore.interval", 60000);
 
 // Enable automatic tab unloading when system memory is low
 user_pref("browser.tabs.unloadOnLowMemory", true);
 
-// Disable prefetching of web pages
-user_pref("network.prefetch-next", false);
+// This allows Firefox to preload links the site author explicitly marks as
+// likely to be clicked next
+user_pref("network.prefetch-next", true);
 
-// Disable DNS prefetching
-user_pref("network.dns.disablePrefetch", true);
+// This allows Firefox to resolve domain names in advance, reducing latency when
+// you click a link
+user_pref("network.dns.disablePrefetch", false);
 
 // The preference network.http.speculative-parallel-limit controls the number of
 // speculative (or preemptive) parallel HTTP connections that Firefox is allowed
@@ -57,7 +59,7 @@ user_pref("network.dns.disablePrefetch", true);
 // that they will visit that site.
 //
 // Setting this value to 0 disables speculative connections entirely.
-user_pref("network.http.speculative-parallel-limit", 0);
+user_pref("network.http.speculative-parallel-limit", 6);
 
 // Disable strict tracking protection. I am using extensions such as uBlock
 // Origin as an alternative to these protections.
@@ -104,6 +106,23 @@ user_pref("browser.translation.enable", false);
 
 // Disable the shortcut for quitting the browser (e.g., Ctrl+Q)
 user_pref("browser.quitShortcut.disabled", true);
+
+// HTTP/3 provides faster connection setup and better performance on networks
+// with packet loss. Add this line:
+user_pref("network.http.http3.enable", true);
+
+// The memory cache is also fully utilized for the fastest possible asset
+// retrieval. Add these lines:
+user_pref("browser.cache.memory.enable", true);
+
+// A value of -1 lets Firefox dynamically decide the maximum memory cache size
+// based on your available system RAM.
+user_pref("browser.cache.memory.capacity", -1);
+
+// Allow larger assets Because the memory cache is enabled (like high-resolution
+// images or large scripts) to be stored in RAM rather than falling back to the
+// disk. The default limit is often too small for modern web pages.
+user_pref("browser.cache.memory.max_entry_size", 51200);  // 50MB per entry.
 
 // Disabling disk cache reduces disk usage and wear, can improve performance on
 // slow or limited storage devices.
@@ -221,16 +240,52 @@ user_pref("signon.rememberSignons", true);
 // user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 1);
 
 /* Hardware acceleration */
-// user_pref("media.ffmpeg.vaapi.enabled", true);  // true in order to enable the use of VA-API with FFmpeg
+user_pref("media.hardware-video-decoding.enabled", true);
+user_pref("media.hardware-video-decoding.force-enabled", true);
+user_pref("gfx.webrender.all", true);
+
+// True in order to enable the use of VA-API with FFmpeg
+user_pref("media.ffmpeg.vaapi.enabled", true);
+
+// Enable WebRender Compositor: This shifts more of the page composition
+// workload to the GPU, freeing up the CPU and improving scrolling framerates.
+user_pref("gfx.webrender.compositor.force-enabled", true);
+
+// Force hardware acceleration for 2D canvas
+user_pref("gfx.canvas.accelerated", true);
+
+// Increase the cache size for accelerated canvas items
+user_pref("gfx.canvas.accelerated.cache-items", 16384);
+user_pref("gfx.canvas.accelerated.cache-size", 512);
+
 // user_pref("media.ffvpx.enabled", true); // tmp enable | Disable the internal decoders for VP8/VP9
-// user_pref("media.hardware-video-decoding.enabled", true);
-// user_pref("media.hardware-video-decoding.force-enabled", true);
 // user_pref("layers.acceleration.force-enabled", true);
 // user_pref("webgl.force-enabled", true);
-// user_pref("gfx.webrender.all", true);
 // user_pref("gfx.webrender.enabled", true);
 // user_pref("webgl.disabled", false);
-//user_pref("dom.ipc.processCount", 8);
+
+// This prevents Firefox from spending rendering resources calculating and
+// drawing temporary boxes while waiting for images to download.
+user_pref("browser.display.show_image_placeholders", false);
+
+// Disable Pocket completely via API (Add): You disabled the Pocket extension,
+// but you can also stop the internal API from initializing.
+user_pref("browser.newtabpage.activity-stream.discoverystream.enabled", false);
+
+// Adjust Content Notification Interval: This setting tells Firefox how often to
+// redraw the page while it is still downloading. Delaying the redraw slightly
+// can reduce CPU load and layout recalculations on heavy pages.
+user_pref("content.notify.ontimer", true);
+user_pref("content.notify.interval", 100000);  // Time in microseconds.
+
+// Enable TCP Fast Open to reduce latency for repeat connections
+user_pref("network.tcp.tcp_fastopen_enable", true);
+
+// Disable general UI cosmetic animations for instant feedback
+user_pref("toolkit.cosmeticAnimations.enabled", false);
+
+// Disable tab opening and closing animations
+user_pref("browser.tabs.animate", false);
 
 //--------------------------------------------------------------------------------
 /*** [SECTION 0800]: LOCATION BAR / SEARCH BAR / SUGGESTIONS / HISTORY / FORMS ***/
