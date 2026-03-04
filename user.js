@@ -249,7 +249,7 @@ user_pref("media.ffmpeg.vaapi.enabled", true);
 
 // Enable WebRender Compositor: This shifts more of the page composition
 // workload to the GPU, freeing up the CPU and improving scrolling framerates.
-user_pref("gfx.webrender.compositor.force-enabled", true);
+// user_pref("gfx.webrender.compositor.force-enabled", true); // Crashes on Youtube
 
 // Force hardware acceleration for 2D canvas
 user_pref("gfx.canvas.accelerated", true);
