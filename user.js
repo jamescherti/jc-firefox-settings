@@ -88,20 +88,10 @@ user_pref("privacy.trackingprotection.emailtracking.pbmode.enabled", false);
 //   than the lists bundled with Firefox.
 user_pref("browser.contentblocking.category", "custom");
 user_pref("privacy.trackingprotection.cryptomining.enabled", false);
+user_pref("privacy.trackingprotection.enabled", false);
 user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
 user_pref("privacy.trackingprotection.pbmode.enabled", false);
-user_pref("privacy.trackingprotection.enabled", false);
 user_pref("privacy.trackingprotection.socialtracking.enabled", false);
-
-// LEGACY
-//
-// Disable enhanced tracking protection for all websites visited while in
-// Private Browsing mode, blocking trackers more aggressively than in normal
-// mode.
-user_pref("privacy.trackingprotection.pbmode.enabled", false);
-user_pref("privacy.trackingprotection.enabled", false);
-user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
-user_pref("privacy.trackingprotection.cryptomining.enabled", false);
 
 // Disable Accessibility Services if unused to reduce memory and CPU usage,
 // improve browser responsiveness, and minimize security risks
