@@ -57,6 +57,13 @@ cp_userjs() {
 
           if [[ "$VIDEO_CARD" == "nvidia" ]]; then
             {
+              # On NVIDIA GPUs, recent drivers may require this flag to enable
+              # VA-API decoding, but forcing it on other hardware (especially
+              # some Intel GPUs) can lead to browser instability, crashes, or
+              # black frames during video playback.
+              echo 'user_pref("media.hardware-video-decoding.force-enabled",' \
+                'true);'
+
               # Set media.rdd-ffmpeg.enabled to true (enabled) on NVIDIA.
               # Because NVIDIA requires you to use the system FFmpeg (via the
               # nvidia-vaapi-driver), this setting ensures the system FFmpeg
@@ -77,9 +84,11 @@ cp_userjs() {
               # use of the system FFmpeg and VA-API
               echo 'user_pref("media.ffvpx.enabled", false);'
             } >>"$dest_dir/user.js"
-          else
-            # Other video cards (e.g., intel)
+          elif [[ "$VIDEO_CARD" == "intel" ]]; then
             {
+              echo 'user_pref("media.hardware-video-decoding.force-enabled",' \
+                'false);'
+
               # Intel graphics drivers have excellent native support for VA-API.
               # Firefox is built to work seamlessly with these drivers right out
               # of the box using its standard media pipeline. Forcing FFmpeg
@@ -123,18 +132,25 @@ main() {
   SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
   cd "$SCRIPT_DIR"
 
-  # Detect if the system has an NVIDIA GPU
+  # Detect the video card type
   if command -v lspci >/dev/null 2>&1; then
     if lspci | grep -i vga | grep -iq nvidia; then
       VIDEO_CARD=nvidia
       echo "[INFO] NVIDIA GPU detected." \
         "Applying hardware-specific configuration."
+      echo
+    elif lspci | grep -i vga | grep -iq intel; then
+      VIDEO_CARD=intel
+      echo "[INFO] Intel GPU detected." \
+        "Applying hardware-specific configuration."
+      echo
     fi
   fi
 
   # Copy user.js file to all destinations
   cp_userjs user.js
 
+  echo
   echo "Success."
 }
 

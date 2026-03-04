@@ -72,10 +72,20 @@ user_pref("privacy.trackingprotection.emailtracking.pbmode.enabled", false);
 // Private Browsing mode, blocking trackers more aggressively than in normal
 // mode.
 user_pref("privacy.trackingprotection.pbmode.enabled", false);
-
 user_pref("privacy.trackingprotection.enabled", false);
 user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
 user_pref("privacy.trackingprotection.cryptomining.enabled", false);
+
+// Disable Enhanced Tracking Protection (ETP). I am using extensions such as
+// uBlock Origin as an alternative to these protections.
+// "custom" enables granular control, and the empty string disables all default
+// blocklists for tracking, fingerprinting, and cryptomining.
+user_pref("browser.contentblocking.category", "custom");
+user_pref("privacy.trackingprotection.cryptomining.enabled", false);
+user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
+user_pref("privacy.trackingprotection.pbmode.enabled", false);
+user_pref("privacy.trackingprotection.enabled", false);
+user_pref("privacy.trackingprotection.socialtracking.enabled", false);
 
 // Disable Accessibility Services if unused to reduce memory and CPU usage,
 // improve browser responsiveness, and minimize security risks
@@ -242,14 +252,10 @@ user_pref("signon.rememberSignons", true);
 /* Hardware acceleration */
 // Recent versions of Firefox require the force flag for VA-API to function
 // correctly on NVIDIA hardware.
-user_pref("media.hardware-video-decoding.force-enabled", true);
 user_pref("media.ffmpeg.vaapi.enabled", true); // Use of VA-API with FFmpeg
 
 user_pref("media.hardware-video-decoding.enabled", true);
 user_pref("gfx.webrender.all", true);
-
-// Forces FFmpeg usage into the RDD process
-user_pref("media.rdd-ffmpeg.enabled", true);
 
 user_pref("widget.dmabuf.force-enabled", true);
 
@@ -260,9 +266,21 @@ user_pref("gfx.canvas.accelerated", true);
 user_pref("gfx.canvas.accelerated.cache-items", 16384);
 user_pref("gfx.canvas.accelerated.cache-size", 512);
 
+// This is a deprecated legacy setting from before WebRender was introduced.
 user_pref("layers.acceleration.force-enabled", true);
-user_pref("webgl.force-enabled", true);
+
+// WebGL is already enabled by default. Forcing it bypasses driver safety
+// blocklists, which can lead to browser crashes if a specific graphics driver
+// version has known bugs.
+//
+// WebGL is already enabled by default: On modern NVIDIA drivers, Firefox
+// naturally detects and enables WebGL without any forced settings.
+// user_pref("webgl.force-enabled", true);
+
+// This is redundant because user_pref("gfx.webrender.all", true); already forces
+// WebRender on globally.
 user_pref("gfx.webrender.enabled", true);
+
 // user_pref("webgl.disabled", false);
 
 // This prevents Firefox from spending rendering resources calculating and
