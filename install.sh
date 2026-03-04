@@ -26,10 +26,11 @@
 # SOFTWARE.
 #
 
-set -euf -o pipefail
+set -euf
 
 LIST_FIREFOX_DIRS=("$HOME/.mozilla/firefox"
   "$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox")
+VIDEO_CARD=""
 
 cp_userjs() {
   local user_js="$1"
@@ -41,8 +42,8 @@ cp_userjs() {
     fi
 
     # Find all profile directories containing times.json
-    find "$firefox_dir" -maxdepth 2 -name "times.json" \
-      | while read -r times_json; do
+    find "$firefox_dir" -maxdepth 2 -name "times.json" -print0 \
+      | while IFS= read -r -d '' times_json; do
         local dest_dir
         dest_dir=$(dirname "$times_json")
 
@@ -50,8 +51,65 @@ cp_userjs() {
         if [[ -f "$dest_dir/storage.sqlite" ]]; then
           echo "[INSTALL] Copying user.js to $dest_dir"
           cp -v "$user_js" "$dest_dir"
+
           echo "user_pref(\"dom.ipc.processCount\", $(nproc));" \
             >>"$dest_dir/user.js"
+
+          if [[ "$VIDEO_CARD" == "nvidia" ]]; then
+            {
+              # Set media.rdd-ffmpeg.enabled to true (enabled) on NVIDIA.
+              # Because NVIDIA requires you to use the system FFmpeg (via the
+              # nvidia-vaapi-driver), this setting ensures the system FFmpeg
+              # runs securely within the RDD process. On Intel, you can leave
+              # this false (disabled) because Intel simply uses Firefox's
+              # internal decoder instead.
+              echo 'user_pref("media.rdd-ffmpeg.enabled", true);'
+
+              # Configure the EGL backend and DMA-BUF sharing, which the
+              # proprietary NVIDIA driver expects.
+              echo 'user_pref("gfx.x11-egl.force-enabled", true);'
+
+              # On NVIDIA, keep the webrender compositor false because it is
+              # highly unstable and frequently causes crashes.
+              echo 'user_pref("gfx.webrender.compositor.force-enabled", false);'
+
+              # On NVIDIA, disable the internal VP8/VP9 decoders, forcing the
+              # use of the system FFmpeg and VA-API
+              echo 'user_pref("media.ffvpx.enabled", false);'
+            } >>"$dest_dir/user.js"
+          else
+            # Other video cards (e.g., intel)
+            {
+              # Intel graphics drivers have excellent native support for VA-API.
+              # Firefox is built to work seamlessly with these drivers right out
+              # of the box using its standard media pipeline. Forcing FFmpeg
+              # into the RDD (Remote Data Decoder) process is a specific
+              # workaround designed to make the proprietary NVIDIA driver
+              # communicate properly with the system FFmpeg. On Intel, applying
+              # this setting adds unnecessary complexity and can interfere with
+              # the standard hardware decoding path.
+              echo 'user_pref("media.rdd-ffmpeg.enabled", false);'
+
+              # Intel relies on the open-source Mesa graphics drivers, which
+              # have provided robust EGL support for years. Because of this,
+              # Firefox automatically detects and enables EGL on Intel setups
+              # perfectly on its own. Using a "force" flag overrides the
+              # built-in safety checks and fallback mechanisms of the browser.
+              # While NVIDIA historically needed this forced due to driver
+              # quirks, forcing it on Intel is redundant and can occasionally
+              # cause instability.
+              echo 'user_pref("gfx.x11-egl.force-enabled", false);'
+
+              # Enable WebRender Compositor: This shifts more of the page
+              # composition workload to the GPU, freeing up the CPU and
+              # improving scrolling framerates.
+              echo 'user_pref("gfx.webrender.compositor.force-enabled", true);'
+
+              # On Intel, set this to true (enabled) because Intel's native
+              # VA-API works perfectly with Firefox's internal decoder.
+              echo 'user_pref("media.ffvpx.enabled", true);'
+            } >>"$dest_dir/user.js"
+          fi
         else
           echo "[IGNORED] $dest_dir (no storage.sqlite)"
         fi
@@ -59,6 +117,23 @@ cp_userjs() {
   done
 }
 
-SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
-cd "$SCRIPT_DIR"
-cp_userjs user.js
+main() {
+  # Cd to the script directory
+  local SCRIPT_DIR
+  SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+  cd "$SCRIPT_DIR"
+
+  # Detect if the system has an NVIDIA GPU
+  if command -v lspci >/dev/null 2>&1; then
+    if lspci | grep -i vga | grep -iq nvidia; then
+      VIDEO_CARD=nvidia
+      echo "[INFO] NVIDIA GPU detected." \
+        "Applying hardware-specific configuration."
+    fi
+  fi
+
+  # Copy user.js file to all destinations
+  cp_userjs user.js
+}
+
+main "$@"

@@ -240,16 +240,18 @@ user_pref("signon.rememberSignons", true);
 // user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 1);
 
 /* Hardware acceleration */
-user_pref("media.hardware-video-decoding.enabled", true);
+// Recent versions of Firefox require the force flag for VA-API to function
+// correctly on NVIDIA hardware.
 user_pref("media.hardware-video-decoding.force-enabled", true);
+user_pref("media.ffmpeg.vaapi.enabled", true); // Use of VA-API with FFmpeg
+
+user_pref("media.hardware-video-decoding.enabled", true);
 user_pref("gfx.webrender.all", true);
 
-// True in order to enable the use of VA-API with FFmpeg
-user_pref("media.ffmpeg.vaapi.enabled", true);
+// Forces FFmpeg usage into the RDD process
+user_pref("media.rdd-ffmpeg.enabled", true);
 
-// Enable WebRender Compositor: This shifts more of the page composition
-// workload to the GPU, freeing up the CPU and improving scrolling framerates.
-// user_pref("gfx.webrender.compositor.force-enabled", true); // Crashes on Youtube
+user_pref("widget.dmabuf.force-enabled", true);
 
 // Force hardware acceleration for 2D canvas
 user_pref("gfx.canvas.accelerated", true);
@@ -258,10 +260,9 @@ user_pref("gfx.canvas.accelerated", true);
 user_pref("gfx.canvas.accelerated.cache-items", 16384);
 user_pref("gfx.canvas.accelerated.cache-size", 512);
 
-// user_pref("media.ffvpx.enabled", true); // tmp enable | Disable the internal decoders for VP8/VP9
-// user_pref("layers.acceleration.force-enabled", true);
-// user_pref("webgl.force-enabled", true);
-// user_pref("gfx.webrender.enabled", true);
+user_pref("layers.acceleration.force-enabled", true);
+user_pref("webgl.force-enabled", true);
+user_pref("gfx.webrender.enabled", true);
 // user_pref("webgl.disabled", false);
 
 // This prevents Firefox from spending rendering resources calculating and
