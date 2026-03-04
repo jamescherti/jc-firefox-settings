@@ -158,7 +158,7 @@ user_pref("browser.download.animateNotifications", false);
 
 // UI: Disable displaying:
 // "You must enable DRM to play some audio or video on this page."
-user_pref("browser.eme.ui.enabled", false);
+user_pref("browser.eme.ui.enabled", true);
 
 // UI: Warn the user when quitting with multiple tabs open
 user_pref("browser.sessionstore.warnOnQuit", true);
@@ -214,7 +214,10 @@ user_pref("sidebar.position_start", false);
 user_pref("ui.systemUsesDarkTheme", 1);
 
 // Force websites to use the Light color scheme preference
-user_pref("layout.css.prefers-color-scheme.content-override", 1)
+// (1) forces all websites into light mode. If you want websites to match your
+// dark browser UI, change the content-override value to 0 (Dark) or 2
+// (Auto/System).
+user_pref("layout.css.prefers-color-scheme.content-override", 2);
 
 // Disable tooltips for toolbar buttons
 user_pref("browser.chrome.toolbar_tips", false);
@@ -315,14 +318,15 @@ user_pref("browser.tabs.animate", false);
 //--------------------------------------------------------------------------------
 /*** [SECTION 0800]: LOCATION BAR / SEARCH BAR / SUGGESTIONS / HISTORY / FORMS ***/
 //--------------------------------------------------------------------------------
-/* 0801: disable location bar using search
+/* 0801: location bar using search
  * Don't leak URL typos to a search engine, give an error message instead
  * Examples: "secretplace,com", "secretplace/com", "secretplace com", "secret place.com"
  * [NOTE] This does not affect explicit user action such as using search buttons in the
  * dropdown, or using keyword search shortcuts you configure in options (e.g. "d" for DuckDuckGo)
  * [SETUP-CHROME] If you don't, or rarely, type URLs, or you use a default search
  * engine that respects privacy, then you probably don't need this ***/
-user_pref("keyword.enabled", false);
+// user_pref("keyword.enabled", false);
+
 /* 0802: disable location bar domain guessing
  * domain guessing intercepts DNS "hostname not found errors" and resends a
  * request (e.g. by adding www or .com). This is inconsistent use (e.g. FQDNs), does not work
@@ -504,7 +508,7 @@ user_pref("browser.crashReports.unsubmittedCheck.autoSubmit2", false); // [DEFAU
 /* 0360: disable Captive Portal detection
  * [1] https://www.eff.org/deeplinks/2017/08/how-captive-portals-interfere-wireless-security-and-privacy ***/
 user_pref("captivedetect.canonicalURL", "");
-user_pref("network.captive-portal-service.enabled", false); // [FF52+]
+// user_pref("network.captive-portal-service.enabled", false); // [FF52+]
 /* 0361: disable Network Connectivity checks [FF65+]
  * [1] https://bugzilla.mozilla.org/1460537 ***/
 user_pref("network.connectivity-service.enabled", false);
