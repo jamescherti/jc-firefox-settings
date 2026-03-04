@@ -134,6 +134,8 @@ main() {
 
   # Copy user.js file to all destinations
   cp_userjs user.js
+
+  echo "Success."
 }
 
 main "$@"
