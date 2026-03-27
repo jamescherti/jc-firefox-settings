@@ -258,40 +258,6 @@ user_pref("signon.rememberSignons", true);
 // Set Safe Browsing remote lookup timeout to 1ms
 // user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 1);
 
-/* Hardware acceleration */
-// Recent versions of Firefox require the force flag for VA-API to function
-// correctly on NVIDIA hardware.
-user_pref("media.ffmpeg.vaapi.enabled", true); // Use of VA-API with FFmpeg
-
-user_pref("media.hardware-video-decoding.enabled", true);
-user_pref("gfx.webrender.all", true);
-
-user_pref("widget.dmabuf.force-enabled", true);
-
-// Force hardware acceleration for 2D canvas
-user_pref("gfx.canvas.accelerated", true);
-
-// Increase the cache size for accelerated canvas items
-user_pref("gfx.canvas.accelerated.cache-items", 16384);
-user_pref("gfx.canvas.accelerated.cache-size", 512);
-
-// This is a deprecated legacy setting from before WebRender was introduced.
-user_pref("layers.acceleration.force-enabled", true);
-
-// WebGL is already enabled by default. Forcing it bypasses driver safety
-// blocklists, which can lead to browser crashes if a specific graphics driver
-// version has known bugs.
-//
-// WebGL is already enabled by default: On modern NVIDIA drivers, Firefox
-// naturally detects and enables WebGL without any forced settings.
-// user_pref("webgl.force-enabled", true);
-
-// This is redundant because user_pref("gfx.webrender.all", true); already forces
-// WebRender on globally.
-user_pref("gfx.webrender.enabled", true);
-
-// user_pref("webgl.disabled", false);
-
 // This prevents Firefox from spending rendering resources calculating and
 // drawing temporary boxes while waiting for images to download.
 user_pref("browser.display.show_image_placeholders", false);
@@ -515,3 +481,60 @@ user_pref("network.connectivity-service.enabled", false);
 /* 0362: enforce disabling of Web Compatibility Reporter [FF56+]
  * Web Compatibility Reporter adds a "Report Site Issue" button to send data to Mozilla ***/
 user_pref("extensions.webcompat-reporter.enabled", false); // [DEFAULT: false]
+
+/* Hardware acceleration */
+
+user_pref("media.hardware-video-decoding.enabled", true);
+
+user_pref("gfx.webrender.all", true);
+
+// Force hardware acceleration for 2D canvas
+user_pref("gfx.canvas.accelerated", true);
+
+// Increase the cache size for accelerated canvas items
+user_pref("gfx.canvas.accelerated.cache-items", 16384);
+user_pref("gfx.canvas.accelerated.cache-size", 512);
+
+// This is a deprecated legacy setting from before WebRender was introduced.
+user_pref("layers.acceleration.force-enabled", true);
+
+// WebGL is already enabled by default. Forcing it bypasses driver safety
+// blocklists, which can lead to browser crashes if a specific graphics driver
+// version has known bugs.
+//
+// WebGL is already enabled by default: On modern NVIDIA drivers, Firefox
+// naturally detects and enables WebGL without any forced settings.
+// user_pref("webgl.force-enabled", true);
+
+// This is redundant because user_pref("gfx.webrender.all", true); already forces
+// WebRender on globally.
+user_pref("gfx.webrender.enabled", true);
+
+// user_pref("webgl.disabled", false);
+
+// This places the FFmpeg decoding process inside a secure sandbox (Remote Data
+// Decoder). It improves browser stability if the older Intel driver encounters
+// an error.
+//
+// Set media.rdd-ffmpeg.enabled to true (enabled) on NVIDIA. Because NVIDIA
+// requires you to use the system FFmpeg (via the nvidia-vaapi-driver), this
+// setting ensures the system FFmpeg runs securely within the RDD process. On
+// Intel, you can leave this false (disabled) because Intel simply uses
+// Firefox's internal decoder instead.
+user_pref("media.rdd-ffmpeg.enabled", true);
+
+// These enable the i965 VA-API driver. For the HD 3000, hardware decoding is
+// limited almost entirely to H.264 (AVC). These settings ensure that when H.264
+// video is played, the GPU handles it.
+//
+// Recent versions of Firefox require the force flag for VA-API to function
+// correctly on NVIDIA hardware.
+user_pref("media.hardware-video-decoding.enabled", true);
+user_pref("media.ffmpeg.vaapi.enabled", true);
+
+// Necessary for efficient buffer sharing on Linux Flatpak environments
+//
+// This is highly recommended for Flatpak on Linux. It allows the GPU and the
+// browser to share memory buffers directly without copying data back and forth,
+// reducing CPU overhead.
+user_pref("widget.dmabuf.force-enabled", true);

@@ -64,14 +64,6 @@ cp_userjs() {
               echo 'user_pref("media.hardware-video-decoding.force-enabled",' \
                 'true);'
 
-              # Set media.rdd-ffmpeg.enabled to true (enabled) on NVIDIA.
-              # Because NVIDIA requires you to use the system FFmpeg (via the
-              # nvidia-vaapi-driver), this setting ensures the system FFmpeg
-              # runs securely within the RDD process. On Intel, you can leave
-              # this false (disabled) because Intel simply uses Firefox's
-              # internal decoder instead.
-              echo 'user_pref("media.rdd-ffmpeg.enabled", true);'
-
               # Configure the EGL backend and DMA-BUF sharing, which the
               # proprietary NVIDIA driver expects.
               echo 'user_pref("gfx.x11-egl.force-enabled", true);'
@@ -98,16 +90,6 @@ cp_userjs() {
               echo 'user_pref("media.hardware-video-decoding.force-enabled",' \
                 'false);'
 
-              # Intel graphics drivers have excellent native support for VA-API.
-              # Firefox is built to work seamlessly with these drivers right out
-              # of the box using its standard media pipeline. Forcing FFmpeg
-              # into the RDD (Remote Data Decoder) process is a specific
-              # workaround designed to make the proprietary NVIDIA driver
-              # communicate properly with the system FFmpeg. On Intel, applying
-              # this setting adds unnecessary complexity and can interfere with
-              # the standard hardware decoding path.
-              echo 'user_pref("media.rdd-ffmpeg.enabled", false);'
-
               # Intel relies on the open-source Mesa graphics drivers, which
               # have provided robust EGL support for years. Because of this,
               # Firefox automatically detects and enables EGL on Intel setups
@@ -123,10 +105,8 @@ cp_userjs() {
               # improving scrolling framerates.
               echo 'user_pref("gfx.webrender.compositor.force-enabled", true);'
 
-              # Disable Firefox's internal software decoder to force video
-              # streams to the system FFmpeg, allowing VA-API hardware
-              # acceleration.
-              echo 'user_pref("media.ffvpx.enabled", false);'
+              # This is the internal Firefox decoder.
+              echo 'user_pref("media.ffvpx.enabled", true);'
 
               # Disabling AV1 is an optimization for keeping a old computers
               # usable on the modern web. Explicitly telling Firefox to reject
