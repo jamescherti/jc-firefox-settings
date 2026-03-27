@@ -83,6 +83,15 @@ cp_userjs() {
               # On NVIDIA, disable the internal VP8/VP9 decoders, forcing the
               # use of the system FFmpeg and VA-API
               echo 'user_pref("media.ffvpx.enabled", false);'
+
+              # Disabling AV1 is an optimization for keeping a old computers
+              # usable on the modern web. Explicitly telling Firefox to reject
+              # AV1 effectively force streaming platforms like YouTube to fall
+              # back to H.264 video streams. This efficient workaround shifts
+              # the decoding burden back to the GPU's native H.264 hardware
+              # decoder, instantly dropping CPU usage and restoring smooth,
+              # cool, and responsive media playback.
+              echo 'user_pref("media.av1.enabled", false);'
             } >>"$dest_dir/user.js"
           elif [[ "$VIDEO_CARD" == "intel" ]]; then
             {
@@ -114,9 +123,19 @@ cp_userjs() {
               # improving scrolling framerates.
               echo 'user_pref("gfx.webrender.compositor.force-enabled", true);'
 
-              # On Intel, set this to true (enabled) because Intel's native
-              # VA-API works perfectly with Firefox's internal decoder.
-              echo 'user_pref("media.ffvpx.enabled", true);'
+              # Disable Firefox's internal software decoder to force video
+              # streams to the system FFmpeg, allowing VA-API hardware
+              # acceleration.
+              echo 'user_pref("media.ffvpx.enabled", false);'
+
+              # Disabling AV1 is an optimization for keeping a old computers
+              # usable on the modern web. Explicitly telling Firefox to reject
+              # AV1 effectively force streaming platforms like YouTube to fall
+              # back to H.264 video streams. This efficient workaround shifts
+              # the decoding burden back to the GPU's native H.264 hardware
+              # decoder, instantly dropping CPU usage and restoring smooth,
+              # cool, and responsive media playback.
+              echo 'user_pref("media.av1.enabled", false);'
             } >>"$dest_dir/user.js"
           fi
         else
