@@ -91,7 +91,7 @@ cp_userjs() {
               # the decoding burden back to the GPU's native H.264 hardware
               # decoder, instantly dropping CPU usage and restoring smooth,
               # cool, and responsive media playback.
-              echo 'user_pref("media.av1.enabled", false);'
+              # echo 'user_pref("media.av1.enabled", false);'
             } >>"$dest_dir/user.js"
           elif [[ "$VIDEO_CARD" == "intel" ]]; then
             {
@@ -135,7 +135,7 @@ cp_userjs() {
               # the decoding burden back to the GPU's native H.264 hardware
               # decoder, instantly dropping CPU usage and restoring smooth,
               # cool, and responsive media playback.
-              echo 'user_pref("media.av1.enabled", false);'
+              # echo 'user_pref("media.av1.enabled", false);'
             } >>"$dest_dir/user.js"
           fi
         else
