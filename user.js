@@ -53,7 +53,12 @@
 // which can make pages appear to load faster visually. However, on slow
 // connections, this might increase the total loading time due to more frequent
 // reflows. Default: 250
-user_pref("nglayout.initialpaint.delay", 25);
+//
+// NOTE: Commented out. Modern Firefox optimizes paint delays dynamically.
+// Forcing a hard limit causes layout thrashing, where the browser redraws the
+// page multiple times as assets load, increasing CPU usage.
+//
+// user_pref("nglayout.initialpaint.delay", 25);
 
 // Setting the session save interval reduces the frequency with which Firefox
 // writes session data (such as open tabs and windows) to disk. This is
@@ -84,14 +89,6 @@ user_pref("network.dns.disablePrefetch", false);
 // Setting this value to 0 disables speculative connections entirely.
 user_pref("network.http.speculative-parallel-limit", 6);
 
-// Disable strict tracking protection. I am using extensions such as uBlock
-// Origin as an alternative to these protections.
-
-// Disable Enhanced Tracking Protection (ETP). I am using extensions such as
-// uBlock Origin as an alternative to these protections. "custom" enables
-// granular control, and the empty string disables all default blocklists for
-// tracking, fingerprinting, and cryptomining.
-
 // Disable Accessibility Services if unused to reduce memory and CPU usage,
 // improve browser responsiveness, and minimize security risks
 //
@@ -106,7 +103,12 @@ user_pref("accessibility.force_disabled", 1);
 //
 // This preference defines the upper limit on the number of such pages stored in
 // memory.
-user_pref("browser.sessionhistory.max_total_viewers", 4);
+//
+// NOTE: Commented out. This controls the Back-Forward Cache (bfcache).
+// Hardcoding it to 4 overrides Firefox's ability to dynamically scale this
+// value based on your total system RAM, potentially limiting performance when
+// navigating back and forth.
+// user_pref("browser.sessionhistory.max_total_viewers", 4);
 
 // Disable services
 user_pref("extensions.pocket.enabled", false);
@@ -124,7 +126,10 @@ user_pref("browser.quitShortcut.disabled", true);
 
 // HTTP/3 provides faster connection setup and better performance on networks
 // with packet loss. Add this line:
-user_pref("network.http.http3.enable", true);
+//
+// NOTE: Commented out. HTTP/3 is enabled by default in all modern versions of
+// Firefox. You do not need to specify it in your user.js.
+// user_pref("network.http.http3.enable", true);
 
 // The memory cache is also fully utilized for the fastest possible asset
 // retrieval. Add these lines:
@@ -139,9 +144,11 @@ user_pref("browser.cache.memory.capacity", -1);
 // disk. The default limit is often too small for modern web pages.
 user_pref("browser.cache.memory.max_entry_size", 51200);  // 50MB per entry.
 
-// Disabling disk cache reduces disk usage and wear, can improve performance on
-// slow or limited storage devices.
-user_pref("browser.cache.disk.enable", false);
+// Disabling the disk cache forces Firefox to re-download static assets (images,
+// CSS, scripts) every time you launch the browser. The RAM cache is cleared on
+// exit, meaning your initial page loads will always be slower and consume more
+// bandwidth.
+user_pref("browser.cache.disk.enable", true);
 
 // Allow caching of SSL pages on disk
 // user_pref("browser.cache.disk_cache_ssl", true);
@@ -268,11 +275,19 @@ user_pref("browser.newtabpage.activity-stream.discoverystream.enabled", false);
 // Adjust Content Notification Interval: This setting tells Firefox how often to
 // redraw the page while it is still downloading. Delaying the redraw slightly
 // can reduce CPU load and layout recalculations on heavy pages.
-user_pref("content.notify.ontimer", true);
-user_pref("content.notify.interval", 100000);  // Time in microseconds.
+//
+// NOTE: Commented out. These are obsolete settings from the dial-up era. They
+// have no positive effect on modern network stacks or rendering engines.
+// user_pref("content.notify.ontimer", true);
+// user_pref("content.notify.interval", 100000);  // Time in microseconds.
 
 // Enable TCP Fast Open to reduce latency for repeat connections
-user_pref("network.tcp.tcp_fastopen_enable", true);
+//
+// NOTE: Commented out. TCP Fast Open (TFO) can theoretically reduce latency,
+// but it is notoriously unstable. Many routers, middleboxes, and ISPs drop TFO
+// packets, which leads to connection timeouts and broken websites. It is safer
+// to remove this.
+// user_pref("network.tcp.tcp_fastopen_enable", true);
 
 // Disable general UI cosmetic animations for instant feedback
 user_pref("toolkit.cosmeticAnimations.enabled", false);
@@ -483,8 +498,6 @@ user_pref("extensions.webcompat-reporter.enabled", false); // [DEFAULT: false]
 
 /* Hardware acceleration */
 
-user_pref("media.hardware-video-decoding.enabled", true);
-
 user_pref("gfx.webrender.all", true);
 
 // Force hardware acceleration for 2D canvas
@@ -494,8 +507,10 @@ user_pref("gfx.canvas.accelerated", true);
 user_pref("gfx.canvas.accelerated.cache-items", 16384);
 user_pref("gfx.canvas.accelerated.cache-size", 512);
 
-// This is a deprecated legacy setting from before WebRender was introduced.
-user_pref("layers.acceleration.force-enabled", true);
+// NOTE: Commented-out. This is a deprecated legacy setting from before
+// WebRender was introduced.
+//
+// user_pref("layers.acceleration.force-enabled", true);
 
 // WebGL is already enabled by default. Forcing it bypasses driver safety
 // blocklists, which can lead to browser crashes if a specific graphics driver
@@ -507,9 +522,11 @@ user_pref("layers.acceleration.force-enabled", true);
 
 // This is redundant because user_pref("gfx.webrender.all", true); already forces
 // WebRender on globally.
-user_pref("gfx.webrender.enabled", true);
-
-// user_pref("webgl.disabled", false);
+//
+// NOTE: Commented out. WebRender is already the default rendering engine
+// globally on Arch Linux and other operating systems. This preference is
+// entirely redundant.
+// user_pref("gfx.webrender.enabled", true);
 
 // This places the FFmpeg decoding process inside a secure sandbox (Remote Data
 // Decoder). It improves browser stability if the older Intel driver encounters
