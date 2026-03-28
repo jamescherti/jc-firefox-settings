@@ -23,6 +23,29 @@
 // SOFTWARE.
 //
 
+// Here is why relying on uBlock Origin instead of Firefox's built-in
+// protections is a standard and effective configuration:
+// - Redundancy reduction: Firefox uses list-based blocking provided by
+//   Disconnect for its Enhanced Tracking Protection. uBlock Origin uses its own
+//   extensive filter lists, such as EasyPrivacy and Peter Lowe's list. Running
+//   both features simultaneously forces your browser to evaluate network
+//   requests twice against very similar rules.
+// - Resource efficiency: uBlock Origin is highly optimized for performance.
+//   Allowing it to handle all content blocking on its own reduces CPU and
+//   memory overhead compared to running two overlapping blocking engines.
+// - Better coverage: The default filter lists maintained by the uBlock Origin
+//   community are generally more comprehensive and updated much more frequently
+//   than the lists bundled with Firefox.
+// user_pref("network.cookie.cookieBehavior", 0);
+// user_pref("privacy.trackingprotection.emailtracking.enabled", false);
+// user_pref("privacy.trackingprotection.emailtracking.pbmode.enabled", false);
+// user_pref("browser.contentblocking.category", "custom");
+// user_pref("privacy.trackingprotection.cryptomining.enabled", false);
+// user_pref("privacy.trackingprotection.enabled", false);
+// user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
+// user_pref("privacy.trackingprotection.pbmode.enabled", false);
+// user_pref("privacy.trackingprotection.socialtracking.enabled", false);
+
 // This preference sets the initial paint delay in milliseconds for Firefox’s
 // rendering engine. It means Firefox will wait before starting to render the
 // content of a web page after receiving the first data from the server. A very
@@ -64,34 +87,10 @@ user_pref("network.http.speculative-parallel-limit", 6);
 // Disable strict tracking protection. I am using extensions such as uBlock
 // Origin as an alternative to these protections.
 
-// Enables tracking protection specifically against email tracking elements
-// (such as tracking pixels) when Firefox is in Private Browsing mode.
-user_pref("privacy.trackingprotection.emailtracking.pbmode.enabled", false);
-
 // Disable Enhanced Tracking Protection (ETP). I am using extensions such as
 // uBlock Origin as an alternative to these protections. "custom" enables
 // granular control, and the empty string disables all default blocklists for
 // tracking, fingerprinting, and cryptomining.
-
-// Here is why relying on uBlock Origin instead of Firefox's built-in
-// protections is a standard and effective configuration:
-// - Redundancy reduction: Firefox uses list-based blocking provided by
-//   Disconnect for its Enhanced Tracking Protection. uBlock Origin uses its own
-//   extensive filter lists, such as EasyPrivacy and Peter Lowe's list. Running
-//   both features simultaneously forces your browser to evaluate network
-//   requests twice against very similar rules.
-// - Resource efficiency: uBlock Origin is highly optimized for performance.
-//   Allowing it to handle all content blocking on its own reduces CPU and
-//   memory overhead compared to running two overlapping blocking engines.
-// - Better coverage: The default filter lists maintained by the uBlock Origin
-//   community are generally more comprehensive and updated much more frequently
-//   than the lists bundled with Firefox.
-user_pref("browser.contentblocking.category", "custom");
-user_pref("privacy.trackingprotection.cryptomining.enabled", false);
-user_pref("privacy.trackingprotection.enabled", false);
-user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
-user_pref("privacy.trackingprotection.pbmode.enabled", false);
-user_pref("privacy.trackingprotection.socialtracking.enabled", false);
 
 // Disable Accessibility Services if unused to reduce memory and CPU usage,
 // improve browser responsiveness, and minimize security risks
