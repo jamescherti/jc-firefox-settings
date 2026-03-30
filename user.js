@@ -531,13 +531,6 @@ user_pref("gfx.canvas.accelerated.cache-size", 512);
 // This places the FFmpeg decoding process inside a secure sandbox (Remote Data
 // Decoder). It improves browser stability if the older Intel driver encounters
 // an error.
-//
-// Set media.rdd-ffmpeg.enabled to true (enabled) on NVIDIA. Because NVIDIA
-// requires you to use the system FFmpeg (via the nvidia-vaapi-driver), this
-// setting ensures the system FFmpeg runs securely within the RDD process. On
-// Intel, you can leave this false (disabled) because Intel simply uses
-// Firefox's internal decoder instead.
-user_pref("media.rdd-ffmpeg.enabled", true);
 
 // These enable the i965 VA-API driver. For the HD 3000, hardware decoding is
 // limited almost entirely to H.264 (AVC). These settings ensure that when H.264

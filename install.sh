@@ -84,6 +84,21 @@ cp_userjs() {
               # decoder, instantly dropping CPU usage and restoring smooth,
               # cool, and responsive media playback.
               # echo 'user_pref("media.av1.enabled", false);'
+
+              #  Set media.rdd-ffmpeg.enabled to true (enabled) on NVIDIA.
+              #  Because NVIDIA requires you to use the system FFmpeg (via the
+              #  nvidia-vaapi-driver), this setting ensures the system FFmpeg
+              #  runs securely within the RDD process. On Intel, you can leave
+              #  this false (disabled) because Intel simply uses Firefox's
+              #  internal decoder instead.
+              #
+              # On Intel / Sandy Bridge hardware, forcing the Remote Data
+              # Decoder (RDD) to handle FFmpeg can sometimes cause a "deadlock"
+              # where the sandbox waits for a response from the buggy Intel
+              # driver that never comes. This makes the tab unresponsive to
+              # clicks on Intel video cards and should only be used on NVIDIA
+              # cards.
+              echo 'user_pref("media.rdd-ffmpeg.enabled", true);'
             } >>"$dest_dir/user.js"
           elif [[ "$VIDEO_CARD" == "intel" ]]; then
             {
