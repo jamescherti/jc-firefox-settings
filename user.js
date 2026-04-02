@@ -546,4 +546,6 @@ user_pref("media.ffmpeg.vaapi.enabled", true);
 // This is highly recommended for Flatpak on Linux. It allows the GPU and the
 // browser to share memory buffers directly without copying data back and forth,
 // reducing CPU overhead.
-user_pref("widget.dmabuf.force-enabled", true);
+//
+// TODO: Testing without this on intel
+// user_pref("widget.dmabuf.force-enabled", true);
