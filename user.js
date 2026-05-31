@@ -46,7 +46,7 @@
 // user_pref("privacy.trackingprotection.pbmode.enabled", false);
 // user_pref("privacy.trackingprotection.socialtracking.enabled", false);
 
-// This preference sets the initial paint delay in milliseconds for Firefox’s
+// This preference sets the initial paint delay in milliseconds for Firefox's
 // rendering engine. It means Firefox will wait before starting to render the
 // content of a web page after receiving the first data from the server. A very
 // low value like 1 ms causes Firefox to begin rendering almost immediately,
