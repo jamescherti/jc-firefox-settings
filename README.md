@@ -1,7 +1,7 @@
 # jc-firefox-settings - JC's Firefox Settings
 ![License](https://img.shields.io/github/license/jamescherti/jc-firefox-settings)
 
-This project provides the a **user.js* file, which holds James Cherti's settings to customize the Firefox web browser to enhance the user experience and security.
+This project provides the a **user.js** file, which holds James Cherti's settings to customize the Firefox web browser to enhance the user experience and security.
 
 ## Requirements
 
