@@ -77,6 +77,9 @@ user_pref("network.prefetch-next", true);
 // you click a link
 user_pref("network.dns.disablePrefetch", false);
 
+// Disable the hover picture preview
+user_pref("browser.tabs.hoverPreview.enabled", false);
+
 // The preference network.http.speculative-parallel-limit controls the number of
 // speculative (or preemptive) parallel HTTP connections that Firefox is allowed
 // to open to a server when the user hovers over or starts interacting with a
