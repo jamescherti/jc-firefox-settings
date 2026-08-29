@@ -66,7 +66,7 @@ cp_userjs() {
 
               # Configure the EGL backend and DMA-BUF sharing, which the
               # proprietary NVIDIA driver expects.
-              # echo 'user_pref("gfx.x11-egl.force-enabled", true);'
+              echo 'user_pref("gfx.x11-egl.force-enabled", true);'
 
               # On NVIDIA, keep the webrender compositor false because it is
               # highly unstable and frequently causes crashes.
