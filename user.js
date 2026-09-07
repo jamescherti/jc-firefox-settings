@@ -116,7 +116,7 @@ user_pref("accessibility.force_disabled", 1);
 // Disable services
 user_pref("extensions.pocket.enabled", false);
 user_pref("extensions.screenshots.disabled", true);
-user_pref("identity.fxaccounts.enabled", false);  // Disable Firefox Sync
+user_pref("identity.fxaccounts.enabled", true);  // Enable Firefox Sync
 
 // Disable automatic page translation to improve performance, enhance privacy,
 // reduce resource usage, and prevent unwanted translations
