@@ -169,8 +169,10 @@ user_pref("browser.download.animateNotifications", false);
 // "You must enable DRM to play some audio or video on this page."
 user_pref("browser.eme.ui.enabled", true);
 
-// UI: Warn the user when quitting with multiple tabs open
-user_pref("browser.sessionstore.warnOnQuit", true);
+// UI: Warn before closing the window or quitting with multiple tabs open
+user_pref("browser.warnOnQuit", true);
+user_pref("browser.warnOnQuitShortcut", true);
+user_pref("browser.tabs.warnOnClose", true);
 
 // Disable the fullscreen warning timeout (default: 3000ms)
 user_pref("full-screen-api.warning.timeout", 0);

@@ -32,8 +32,9 @@ LIST_FIREFOX_DIRS=("$HOME/.mozilla/firefox"
   "$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox")
 VIDEO_CARD=""
 
-cp_userjs() {
+update_firefox_config() {
   local user_js="$1"
+  local user_chrome="$2"
 
   local firefox_dir
   for firefox_dir in "${LIST_FIREFOX_DIRS[@]}"; do
@@ -50,7 +51,11 @@ cp_userjs() {
         # Check for storage.sqlite
         if [[ -f "$dest_dir/storage.sqlite" ]]; then
           echo "[INSTALL] Copying user.js to $dest_dir"
-          cp -v "$user_js" "$dest_dir"
+          cp -uv "$user_js" "$dest_dir"
+
+          echo "[INSTALL] Copying $user_chrome to $dest_dir/$user_chrome"
+          mkdir -p "$dest_dir/chrome/"
+          cp -uv "$user_chrome" "$dest_dir/chrome/userChrome.css"
 
           echo "user_pref(\"dom.ipc.processCount\", $(nproc));" \
             >>"$dest_dir/user.js"
@@ -162,7 +167,7 @@ main() {
   fi
 
   # Copy user.js file to all destinations
-  cp_userjs user.js
+  update_firefox_config user.js userChrome.css
 
   echo
   echo "Success."
