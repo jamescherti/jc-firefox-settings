@@ -554,3 +554,22 @@ user_pref("media.ffmpeg.vaapi.enabled", true);
 //
 // TODO: Testing without this on intel
 // user_pref("widget.dmabuf.force-enabled", true);
+
+// -----------------------------------------------------------------------------
+// SCROLLING AND RENDERING
+// -----------------------------------------------------------------------------
+// Disable smooth scrolling to reduce GPU and CPU rendering loads. Older GPUs
+// often drop frames during smooth scrolling, making the browser feel sluggish.
+user_pref("general.smoothScroll", false);
+
+// -----------------------------------------------------------------------------
+// CPU OVERHEAD REDUCTION
+// -----------------------------------------------------------------------------
+// Disable Reader View parsing on page load. Firefox parses every loaded page
+// in the background to determine if it can be displayed in Reader View.
+// Disabling this saves CPU cycles on older dual-core processors.
+// TODO old hardware only
+user_pref("reader.parse-on-load.enabled", false);
+
+// Disable the built-in spell checker to save CPU cycles and RAM.
+user_pref("layout.spellcheckDefault", 0);

@@ -42,6 +42,27 @@ update_firefox_config() {
       continue
     fi
 
+    local cpu_model
+    cpu_model=$(grep -m1 'model name' /proc/cpuinfo || true)
+
+    local cpu_gen
+    if [[ "$cpu_model" =~ i[3579]-([0-9]+) ]]; then
+      local model_num="${BASH_REMATCH[1]}"
+      local cpu_gen=99 # Default to a high number if parsing fails
+
+      # e.g., i5-520M (1st Gen, 3 digits)
+      if ((${#model_num} == 3)); then
+        cpu_gen=1
+      # e.g., i5-2520M (2nd Gen, 4 digits) or i7-1165G7 (11th Gen, 4 digits)
+      elif ((${#model_num} >= 4)); then
+        # Strip the last 3 characters to isolate the generation
+        cpu_gen="${model_num:0:${#model_num}-3}"
+      fi
+    elif echo "$cpu_model" | grep -iqE 'Core.*(2|Duo|Quad)'; then
+      # Legacy pre-Core i-series hardware (e.g., Core 2 Duo)
+      cpu_gen=1
+    fi
+
     # Find all profile directories containing times.json
     find "$firefox_dir" -maxdepth 2 -name "times.json" -print0 \
       | while IFS= read -r -d '' times_json; do
@@ -51,13 +72,24 @@ update_firefox_config() {
         # Check for storage.sqlite
         if [[ -f "$dest_dir/storage.sqlite" ]]; then
           echo "[INSTALL] Copying user.js to $dest_dir"
-          cp -uv "$user_js" "$dest_dir"
+          cp -v "$user_js" "$dest_dir"
 
           echo "[INSTALL] Copying $user_chrome to $dest_dir/$user_chrome"
           mkdir -p "$dest_dir/chrome/"
-          cp -uv "$user_chrome" "$dest_dir/chrome/userChrome.css"
+          cp -v "$user_chrome" "$dest_dir/chrome/userChrome.css"
 
-          echo "user_pref(\"dom.ipc.processCount\", $(nproc));" \
+          # --------------------------------------------------------------------
+          # MEMORY MANAGEMENT
+          # --------------------------------------------------------------------
+          # Limit the number of content processes. Firefox defaults to 8. Your
+          # install script sets this to the thread count (4 on a T420s). Setting
+          # this explicitly to 2 will significantly reduce RAM usage if the
+          # machine has 4GB or 8GB of RAM.
+          local process_count=$(($(nproc) / 2))
+          if [[ "$process_count" -lt 1 ]]; then
+            process_count=1
+          fi
+          echo "user_pref(\"dom.ipc.processCount\", ${process_count});" \
             >>"$dest_dir/user.js"
 
           if [[ "$VIDEO_CARD" == "nvidia" ]]; then
@@ -135,7 +167,16 @@ update_firefox_config() {
               # the decoding burden back to the GPU's native H.264 hardware
               # decoder, instantly dropping CPU usage and restoring smooth,
               # cool, and responsive media playback.
-              # echo 'user_pref("media.av1.enabled", false);'
+              # VP9 hardware decoding became standard in 7th Gen
+              if ((cpu_gen < 7)); then
+                echo 'user_pref("media.mediasource.vp9.enabled", false);' >>"$dest_dir/user.js"
+              fi
+
+              # AV1 hardware decoding became standard in 11th Gen
+              if ((cpu_gen < 11)); then
+                echo 'user_pref("media.av1.enabled", false);' >>"$dest_dir/user.js"
+              fi
+
             } >>"$dest_dir/user.js"
           fi
         else
