@@ -42,27 +42,6 @@ update_firefox_config() {
       continue
     fi
 
-    local cpu_model
-    cpu_model=$(grep -m1 'model name' /proc/cpuinfo || true)
-
-    local cpu_gen
-    if [[ "$cpu_model" =~ i[3579]-([0-9]+) ]]; then
-      local model_num="${BASH_REMATCH[1]}"
-      local cpu_gen=99 # Default to a high number if parsing fails
-
-      # e.g., i5-520M (1st Gen, 3 digits)
-      if ((${#model_num} == 3)); then
-        cpu_gen=1
-      # e.g., i5-2520M (2nd Gen, 4 digits) or i7-1165G7 (11th Gen, 4 digits)
-      elif ((${#model_num} >= 4)); then
-        # Strip the last 3 characters to isolate the generation
-        cpu_gen="${model_num:0:${#model_num}-3}"
-      fi
-    elif echo "$cpu_model" | grep -iqE 'Core.*(2|Duo|Quad)'; then
-      # Legacy pre-Core i-series hardware (e.g., Core 2 Duo)
-      cpu_gen=1
-    fi
-
     # Find all profile directories containing times.json
     find "$firefox_dir" -maxdepth 2 -name "times.json" -print0 \
       | while IFS= read -r -d '' times_json; do
@@ -168,13 +147,13 @@ update_firefox_config() {
               # decoder, instantly dropping CPU usage and restoring smooth,
               # cool, and responsive media playback.
               # VP9 hardware decoding became standard in 7th Gen
-              if ((cpu_gen < 7)); then
-                echo 'user_pref("media.mediasource.vp9.enabled", false);' >>"$dest_dir/user.js"
+              if ((CPU_GEN < 7)); then
+                echo 'user_pref("media.mediasource.vp9.enabled", false);'
               fi
 
               # AV1 hardware decoding became standard in 11th Gen
-              if ((cpu_gen < 11)); then
-                echo 'user_pref("media.av1.enabled", false);' >>"$dest_dir/user.js"
+              if ((CPU_GEN < 11)); then
+                echo 'user_pref("media.av1.enabled", false);'
               fi
 
             } >>"$dest_dir/user.js"
@@ -184,6 +163,28 @@ update_firefox_config() {
         fi
       done
   done
+}
+
+detect_cpu_gen() {
+  local cpu_model
+  cpu_model=$(grep -m1 'model name' /proc/cpuinfo || true)
+
+  if [[ "$cpu_model" =~ i[3579]-([0-9]+) ]]; then
+    local model_num="${BASH_REMATCH[1]}"
+    CPU_GEN=99 # Default to a high number if parsing fails
+
+    # e.g., i5-520M (1st Gen, 3 digits)
+    if ((${#model_num} == 3)); then
+      CPU_GEN=1
+    # e.g., i5-2520M (2nd Gen, 4 digits) or i7-1165G7 (11th Gen, 4 digits)
+    elif ((${#model_num} >= 4)); then
+      # Strip the last 3 characters to isolate the generation
+      CPU_GEN="${model_num:0:${#model_num}-3}"
+    fi
+  elif echo "$cpu_model" | grep -iqE 'Core.*(2|Duo|Quad)'; then
+    # Legacy pre-Core i-series hardware (e.g., Core 2 Duo)
+    CPU_GEN=1
+  fi
 }
 
 main() {
@@ -206,6 +207,8 @@ main() {
       echo
     fi
   fi
+
+  detect_cpu_gen
 
   # Copy user.js file to all destinations
   update_firefox_config user.js userChrome.css
