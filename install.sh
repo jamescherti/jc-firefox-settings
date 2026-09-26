@@ -31,6 +31,7 @@ set -euf
 LIST_FIREFOX_DIRS=("$HOME/.mozilla/firefox"
   "$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox")
 VIDEO_CARD=""
+CPU_GEN=99
 
 update_firefox_config() {
   local user_js="$1"
@@ -148,6 +149,12 @@ update_firefox_config() {
               # cool, and responsive media playback.
               # VP9 hardware decoding became standard in 7th Gen
               if ((CPU_GEN < 7)); then
+                # Disable Reader View parsing on page load. Firefox parses every
+                # loaded page in the background to determine if it can be
+                # displayed in Reader View. Disabling this saves CPU cycles on
+                # older dual-core processors.
+                echo 'user_pref("reader.parse-on-load.enabled", false);'
+
                 echo 'user_pref("media.mediasource.vp9.enabled", false);'
               fi
 
@@ -171,15 +178,20 @@ detect_cpu_gen() {
 
   if [[ "$cpu_model" =~ i[3579]-([0-9]+) ]]; then
     local model_num="${BASH_REMATCH[1]}"
-    CPU_GEN=99 # Default to a high number if parsing fails
 
     # e.g., i5-520M (1st Gen, 3 digits)
     if ((${#model_num} == 3)); then
       CPU_GEN=1
-    # e.g., i5-2520M (2nd Gen, 4 digits) or i7-1165G7 (11th Gen, 4 digits)
-    elif ((${#model_num} >= 4)); then
-      # Strip the last 3 characters to isolate the generation
-      CPU_GEN="${model_num:0:${#model_num}-3}"
+    elif ((${#model_num} == 4)); then
+      # Handle 10th/11th/12th gen mobile (e.g., 1165 -> 11) vs 2nd-9th gen (e.g., 2520 -> 2)
+      if [[ "${model_num:0:1}" == "1" ]]; then
+        CPU_GEN="${model_num:0:2}"
+      else
+        CPU_GEN="${model_num:0:1}"
+      fi
+    # e.g., i9-10900K (10th Gen+, 5 digits)
+    elif ((${#model_num} >= 5)); then
+      CPU_GEN="${model_num:0:2}"
     fi
   elif echo "$cpu_model" | grep -iqE 'Core.*(2|Duo|Quad)'; then
     # Legacy pre-Core i-series hardware (e.g., Core 2 Duo)
