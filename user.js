@@ -609,3 +609,26 @@ user_pref("beacon.enabled", false);
 // Prevents the browser from continuously polling USB ports and system buses for
 // connected game controllers.
 user_pref("dom.gamepad.enabled", false);
+
+// Reduce the number of closed tabs and windows retained in memory.
+// The default is to remember 25 closed tabs and 3 closed windows. Lowering
+// these values reduces continuous memory allocation.
+user_pref("browser.sessionstore.max_tabs_undo", 5);
+user_pref("browser.sessionstore.max_windows_undo", 1);
+
+// Limit media memory cache size.
+// Caps the amount of RAM allocated for buffering HTML5 audio and video.
+// The value is in kilobytes. A value of 65536 allocates 64MB.
+// TODO
+// user_pref("media.memory_cache_max_size", 65536);
+
+// Reduce maximum concurrent HTTP connections.
+// The default allows up to 900 concurrent connections. Lowering this prevents
+// legacy network interfaces and basic routers from dropping packets due to
+// connection saturation.
+user_pref("network.http.max-connections", 256);
+
+// Disable Firefox recommendation pane in settings.
+// Prevents the browser from fetching and rendering dynamic feature recommendations
+// within the preferences menu.
+user_pref("browser.preferences.moreFromMozilla", false);
