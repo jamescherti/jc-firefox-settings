@@ -151,7 +151,7 @@ user_pref("browser.cache.memory.max_entry_size", 51200);  // 50MB per entry.
 // CSS, scripts) every time you launch the browser. The RAM cache is cleared on
 // exit, meaning your initial page loads will always be slower and consume more
 // bandwidth.
-user_pref("browser.cache.disk.enable", false);
+user_pref("browser.cache.disk.enable", true);
 
 // Allow caching of SSL pages on disk
 // user_pref("browser.cache.disk_cache_ssl", true);
@@ -584,25 +584,7 @@ user_pref("layout.spellcheckDefault", 0);
 // -----------------------------------------------------------------------------
 // SPEED
 // -----------------------------------------------------------------------------
-// Disable the network predictor.
-// The predictor algorithm consumes CPU cycles and disk I/O when attempting to
-// guess future link clicks based on browsing history.
-user_pref("network.predictor.enabled", false);
-user_pref("network.predictor.enable-prefetch", false);
-
-// Disable link prefetching.
-// Downloading and rendering unvisited pages in the background consumes limited
-// CPU and network resources.
-user_pref("network.prefetch-next", false);
-
-// Disable fullscreen animations.
-// Fullscreen transitions can cause legacy GPUs to drop frames.
-user_pref("browser.fullscreen.animate", false);
-
-// Disable link auditing and web beacons.
-// Prevents the browser from sending background network requests when links are
-// clicked or web pages are closed.
-user_pref("browser.send_pings", false);
+// Disable web beacons.
 user_pref("beacon.enabled", false);
 
 // Disable Gamepad API.
@@ -610,25 +592,31 @@ user_pref("beacon.enabled", false);
 // connected game controllers.
 user_pref("dom.gamepad.enabled", false);
 
-// Reduce the number of closed tabs and windows retained in memory.
-// The default is to remember 25 closed tabs and 3 closed windows. Lowering
-// these values reduces continuous memory allocation.
-user_pref("browser.sessionstore.max_tabs_undo", 5);
-user_pref("browser.sessionstore.max_windows_undo", 1);
+// Disable Firefox recommendation pane in settings.
+// Prevents the browser from fetching and rendering dynamic feature recommendations
+// within the preferences menu.
+user_pref("browser.preferences.moreFromMozilla", false);
 
-// Limit media memory cache size.
-// Caps the amount of RAM allocated for buffering HTML5 audio and video.
-// The value is in kilobytes. A value of 65536 allocates 64MB.
-// TODO
-// user_pref("media.memory_cache_max_size", 65536);
+// -----------------------------------------------------------------------------
+// Legacy hardware
+// -----------------------------------------------------------------------------
+// Disable fullscreen animations.
+// Fullscreen transitions can cause legacy GPUs to drop frames.
+user_pref("browser.fullscreen.animate", false);
 
 // Reduce maximum concurrent HTTP connections.
 // The default allows up to 900 concurrent connections. Lowering this prevents
 // legacy network interfaces and basic routers from dropping packets due to
 // connection saturation.
+//
+// TODO: Network Bottlenecks: Capping concurrent HTTP connections to 256
+// (network.http.max-connections) restricts the browser from fetching multiple
+// assets simultaneously on heavy web pages. Modern network interfaces and
+// routers handle the default limit of 900 without issue.
 user_pref("network.http.max-connections", 256);
 
-// Disable Firefox recommendation pane in settings.
-// Prevents the browser from fetching and rendering dynamic feature recommendations
-// within the preferences menu.
-user_pref("browser.preferences.moreFromMozilla", false);
+// Reduce the number of closed tabs and windows retained in memory.
+// The default is to remember 25 closed tabs and 3 closed windows. Lowering
+// these values reduces continuous memory allocation.
+user_pref("browser.sessionstore.max_tabs_undo", 10);
+user_pref("browser.sessionstore.max_windows_undo", 2);
