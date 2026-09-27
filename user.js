@@ -60,12 +60,6 @@
 //
 // user_pref("nglayout.initialpaint.delay", 25);
 
-// Setting the session save interval reduces the frequency with which Firefox
-// writes session data (such as open tabs and windows) to disk. This is
-// beneficial for the following reasons: Reduced Disk I/O, Improved Performance,
-// and Power Efficiency.
-user_pref("browser.sessionstore.interval", 60000);
-
 // Enable automatic tab unloading when system memory is low
 user_pref("browser.tabs.unloadOnLowMemory", true);
 
@@ -79,18 +73,6 @@ user_pref("network.dns.disablePrefetch", false);
 
 // Disable the hover picture preview
 user_pref("browser.tabs.hoverPreview.enabled", false);
-
-// The preference network.http.speculative-parallel-limit controls the number of
-// speculative (or preemptive) parallel HTTP connections that Firefox is allowed
-// to open to a server when the user hovers over or starts interacting with a
-// link (e.g., typing in the address bar, or mousing over suggestions).
-//
-// Firefox uses speculative connections to reduce perceived latency: it opens
-// TCP connections before the user actually clicks a link, under the assumption
-// that they will visit that site.
-//
-// Setting this value to 0 disables speculative connections entirely.
-user_pref("network.http.speculative-parallel-limit", 6);
 
 // Disable Accessibility Services if unused to reduce memory and CPU usage,
 // improve browser responsiveness, and minimize security risks
@@ -120,7 +102,7 @@ user_pref("identity.fxaccounts.enabled", true);  // Enable Firefox Sync
 
 // Disable automatic page translation to improve performance, enhance privacy,
 // reduce resource usage, and prevent unwanted translations
-user_pref("browser.translation.enable", false);
+user_pref("browser.translations.enable", false);
 
 // user_pref("browser.sessionstore.resume_session_once", true)
 
@@ -145,7 +127,7 @@ user_pref("browser.cache.memory.capacity", -1);
 // Allow larger assets Because the memory cache is enabled (like high-resolution
 // images or large scripts) to be stored in RAM rather than falling back to the
 // disk. The default limit is often too small for modern web pages.
-user_pref("browser.cache.memory.max_entry_size", 51200);  // 50MB per entry.
+user_pref("browser.cache.memory.max_entry_size", 10000);
 
 // Disabling the disk cache forces Firefox to re-download static assets (images,
 // CSS, scripts) every time you launch the browser. The RAM cache is cleared on
@@ -168,20 +150,10 @@ user_pref("security.enterprise_roots.enabled", true);
 // UI: Open container tabs on left-click instead of requiring a menu selection
 user_pref("privacy.userContext.newTabContainerOnLeftClick.enabled", true);
 
-// UI: Disable animation for download notifications
-user_pref("browser.download.animateNotifications", false);
-
-// UI: Disable displaying:
-// "You must enable DRM to play some audio or video on this page."
-user_pref("browser.eme.ui.enabled", true);
-
 // UI: Warn before closing the window or quitting with multiple tabs open
 user_pref("browser.warnOnQuit", true);
 user_pref("browser.warnOnQuitShortcut", true);
 user_pref("browser.tabs.warnOnClose", true);
-
-// Disable the fullscreen warning timeout (default: 3000ms)
-user_pref("full-screen-api.warning.timeout", 0);
 
 // Prevent Firefox from recommending addons while browsing
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
@@ -211,15 +183,6 @@ user_pref("general.autoScroll", true);
 // user_pref("media.autoplay.enabled", false);  // Deprecated
 // (0 = allow, 1 = block audio, 5 = block all).
 user_pref("media.autoplay.default", 5);
-
-// Set mouse wheel acceleration factor (default: 10)
-user_pref("mousewheel.acceleration.factor", 2);
-
-// Disable mouse wheel acceleration start threshold (default: -1)
-user_pref("mousewheel.acceleration.start", 0);
-
-// Set the minimum scroll amount per mouse wheel tick (default: 5)
-user_pref("mousewheel.min_line_scroll_amount", 1);
 
 // UI: Set a minimal delay before security dialogs appear
 user_pref("security.dialog_enable_delay", 1);
@@ -274,10 +237,6 @@ user_pref("signon.rememberSignons", true);
 
 // Set Safe Browsing remote lookup timeout to 1ms
 // user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 1);
-
-// This prevents Firefox from spending rendering resources calculating and
-// drawing temporary boxes while waiting for images to download.
-user_pref("browser.display.show_image_placeholders", false);
 
 // Disable Pocket completely via API (Add): You disabled the Pocket extension,
 // but you can also stop the internal API from initializing.
@@ -509,14 +468,8 @@ user_pref("extensions.webcompat-reporter.enabled", false); // [DEFAULT: false]
 
 /* Hardware acceleration */
 
-user_pref("gfx.webrender.all", true);
-
 // Force hardware acceleration for 2D canvas
 user_pref("gfx.canvas.accelerated", true);
-
-// Increase the cache size for accelerated canvas items
-user_pref("gfx.canvas.accelerated.cache-items", 16384);
-user_pref("gfx.canvas.accelerated.cache-size", 512);
 
 // NOTE: Commented-out. This is a deprecated legacy setting from before
 // WebRender was introduced.
@@ -550,7 +503,6 @@ user_pref("gfx.canvas.accelerated.cache-size", 512);
 // Recent versions of Firefox require the force flag for VA-API to function
 // correctly on NVIDIA hardware.
 user_pref("media.hardware-video-decoding.enabled", true);
-user_pref("media.ffmpeg.vaapi.enabled", true);
 
 // Necessary for efficient buffer sharing on Linux Flatpak environments
 //
@@ -562,40 +514,90 @@ user_pref("media.ffmpeg.vaapi.enabled", true);
 // user_pref("widget.dmabuf.force-enabled", true);
 
 // -----------------------------------------------------------------------------
-// SCROLLING AND RENDERING
-// -----------------------------------------------------------------------------
-// Disable smooth scrolling to reduce GPU and CPU rendering loads. Older GPUs
-// often drop frames during smooth scrolling, making the browser feel sluggish.
-user_pref("general.smoothScroll", false);
-
-// -----------------------------------------------------------------------------
 // CPU OVERHEAD REDUCTION
 // -----------------------------------------------------------------------------
 // Disable the built-in spell checker to save CPU cycles and RAM.
 user_pref("layout.spellcheckDefault", 0);
 
 // -----------------------------------------------------------------------------
-// SPEED
+// UI
 // -----------------------------------------------------------------------------
-// Disable web beacons.
-user_pref("beacon.enabled", false);
+// UI: Disable animation for download notifications
+user_pref("browser.download.animateNotifications", false);
 
-// Disable Gamepad API.
-// Prevents the browser from continuously polling USB ports and system buses for
-// connected game controllers.
-user_pref("dom.gamepad.enabled", false);
+// UI: Disable displaying:
+// "You must enable DRM to play some audio or video on this page."
+user_pref("browser.eme.ui.enabled", true);
+
+// Disable the fullscreen warning timeout (default: 3000ms)
+user_pref("full-screen-api.warning.timeout", 0);
+
+// This prevents Firefox from spending rendering resources calculating and
+// drawing temporary boxes while waiting for images to download.
+user_pref("browser.display.show_image_placeholders", false);
 
 // Disable Firefox recommendation pane in settings.
 // Prevents the browser from fetching and rendering dynamic feature recommendations
 // within the preferences menu.
 user_pref("browser.preferences.moreFromMozilla", false);
 
-// -----------------------------------------------------------------------------
-// Legacy hardware
-// -----------------------------------------------------------------------------
 // Disable fullscreen animations.
 // Fullscreen transitions can cause legacy GPUs to drop frames.
 user_pref("browser.fullscreen.animate", false);
+
+// -----------------------------------------------------------------------------
+// Mouse
+// -----------------------------------------------------------------------------
+// Set mouse wheel acceleration factor (default: 10)
+user_pref("mousewheel.acceleration.factor", 2);
+
+// Disable mouse wheel acceleration start threshold (default: -1)
+user_pref("mousewheel.acceleration.start", 0);
+
+// Set the minimum scroll amount per mouse wheel tick (default: 5)
+user_pref("mousewheel.min_line_scroll_amount", 1);
+
+// Disable smooth scrolling to reduce GPU and CPU rendering loads. Older GPUs
+// often drop frames during smooth scrolling, making the browser feel sluggish.
+user_pref("general.smoothScroll", false);
+
+// -----------------------------------------------------------------------------
+// Recently commented out
+// -----------------------------------------------------------------------------
+// Setting the session save interval reduces the frequency with which Firefox
+// writes session data (such as open tabs and windows) to disk. This is
+// beneficial for the following reasons: Reduced Disk I/O, Improved Performance,
+// and Power Efficiency.
+user_pref("browser.sessionstore.interval", 60000);
+
+// The preference network.http.speculative-parallel-limit controls the number of
+// speculative (or preemptive) parallel HTTP connections that Firefox is allowed
+// to open to a server when the user hovers over or starts interacting with a
+// link (e.g., typing in the address bar, or mousing over suggestions).
+//
+// Firefox uses speculative connections to reduce perceived latency: it opens
+// TCP connections before the user actually clicks a link, under the assumption
+// that they will visit that site.
+//
+// Setting this value to 0 disables speculative connections entirely.
+//
+// Note: Definitely remove this. Firefox currently defaults it to 20. A value of
+// 6 is not an optimization; it restricts speculative connections and can
+// increase perceived latency.
+// user_pref("network.http.speculative-parallel-limit", 6);
+
+// Increase the cache size for accelerated canvas items
+// These override current defaults of 8192 and 256 MiB respectively. Increasing
+// them is not a general optimization and unnecessarily increases the amount of
+// GPU/cache memory Firefox can use.
+// user_pref("gfx.canvas.accelerated.cache-items", 16384);
+// user_pref("gfx.canvas.accelerated.cache-size", 512);
+
+// TODO Remove this on current Firefox. media.ffmpeg.vaapi.enabled was replaced
+// by media.hardware-video-decoding.force-enabled in Firefox 137-era Linux
+// VA-API handling, and current Firefox's configuration no longer uses the old
+// preference as the modern control.
+// user_pref("media.ffmpeg.vaapi.enabled", true);
 
 // Reduce maximum concurrent HTTP connections.
 // The default allows up to 900 concurrent connections. Lowering this prevents
@@ -606,10 +608,42 @@ user_pref("browser.fullscreen.animate", false);
 // (network.http.max-connections) restricts the browser from fetching multiple
 // assets simultaneously on heavy web pages. Modern network interfaces and
 // routers handle the default limit of 900 without issue.
-user_pref("network.http.max-connections", 450);
+//
+// Note: Remove this. Current Firefox uses 900 as the non-Android default.
+// Reducing it to 450 does not solve a typical modern networking problem and can
+// restrict concurrent connections unnecessarily.
+// user_pref("network.http.max-connections", 450);
 
 // Reduce the number of closed tabs and windows retained in memory.
 // The default is to remember 25 closed tabs and 3 closed windows. Lowering
 // these values reduces continuous memory allocation.
-user_pref("browser.sessionstore.max_tabs_undo", 10);
-user_pref("browser.sessionstore.max_windows_undo", 2);
+//
+// Note: Remove both. Current defaults are 25 tabs and 5 windows. These limits
+// do not provide a worthwhile memory optimization for most systems.
+// user_pref("browser.sessionstore.max_tabs_undo", 10);
+// user_pref("browser.sessionstore.max_windows_undo", 2);
+
+// Disable web beacons.
+// Note: beacon.enabled and dom.gamepad.enabled disable web APIs. The CPU
+// savings are unlikely to justify the compatibility cost.
+// user_pref("beacon.enabled", false);
+
+// Disable Gamepad API.
+// Prevents the browser from continuously polling USB ports and system buses for
+// connected game controllers.
+// Note: beacon.enabled and dom.gamepad.enabled disable web APIs. The CPU
+// savings are unlikely to justify the compatibility cost.
+// user_pref("dom.gamepad.enabled", false);
+
+// I would remove this from a general-purpose optimized configuration.
+//
+// Current Firefox defines the pref's default as false, because it is a
+// forcing/testing-style control rather than a normal user performance setting.
+// Firefox's graphics code still evaluates GPU capability, blocklisting, and
+// fallback paths. Mozilla's WebRender documentation specifically describes
+// gfx.webrender.all as a way to force WebRender, and recommends verifying the
+// resulting compositor in about:support.
+//
+// For an older GPU, forcing WebRender is especially something that should be
+// justified by testing rather than placed in a generic optimization file.
+// user_pref("gfx.webrender.all", true);
