@@ -379,7 +379,7 @@ user_pref("signon.rememberSignons", false);
 // Tradeoff: Leaves the user exposed to installing bundled adware or potentially
 // unwanted programs.
 // TODO
-// user_pref("browser.safebrowsing.downloads.remote.block_potentially_unwanted", false);
+user_pref("browser.safebrowsing.downloads.remote.block_potentially_unwanted", true);
 
 // Disable blocking of uncommon downloads
 //
@@ -387,8 +387,7 @@ user_pref("signon.rememberSignons", false);
 //
 // Tradeoff: Increases the risk of executing untrusted or experimental files
 // that have not established a safe reputation.
-// TODO
-// user_pref("browser.safebrowsing.downloads.remote.block_uncommon", true);
+user_pref("browser.safebrowsing.downloads.remote.block_uncommon", true);
 
 // Disable malware protection from Google Safe Browsing
 //
@@ -397,8 +396,7 @@ user_pref("signon.rememberSignons", false);
 //
 // Tradeoff: Removes a significant layer of defense against known malicious
 // domains and drive-by downloads.
-// TODO
-// user_pref("browser.safebrowsing.malware.enabled", false);
+user_pref("browser.safebrowsing.malware.enabled", true);
 
 // Disable phishing protection from Google Safe Browsing
 //
@@ -408,7 +406,7 @@ user_pref("signon.rememberSignons", false);
 // Tradeoff: Leaves the user vulnerable to credential harvesting and deceptive
 // websites masquerading as legitimate services.
 // TODO
-// user_pref("browser.safebrowsing.phishing.enabled", false);
+user_pref("browser.safebrowsing.phishing.enabled", true);
 
 // Disable Safe Browsing for downloads
 //
@@ -417,7 +415,7 @@ user_pref("signon.rememberSignons", false);
 //
 // Tradeoff: Allows known malicious payloads to be downloaded without any
 // browser intervention.
-user_pref("browser.safebrowsing.downloads.enabled", false);
+user_pref("browser.safebrowsing.downloads.enabled", true);
 
 // Disable blocking of dangerous URLs via Safe Browsing
 //
@@ -426,7 +424,7 @@ user_pref("browser.safebrowsing.downloads.enabled", false);
 //
 // Tradeoff: Users will not be stopped from navigating to verified attack
 // vectors.
-user_pref("browser.safebrowsing.blockedURIs.enabled", false);
+user_pref("browser.safebrowsing.blockedURIs.enabled", true);
 
 // Disable blocking of dangerous file downloads
 //
@@ -435,7 +433,7 @@ user_pref("browser.safebrowsing.blockedURIs.enabled", false);
 //
 // Tradeoff: Increases the likelihood of system compromise if the user lacks
 // external antivirus protection.
-user_pref("browser.safebrowsing.downloads.remote.block_dangerous", false);
+user_pref("browser.safebrowsing.downloads.remote.block_dangerous", true);
 
 // Set Safe Browsing remote lookup timeout to 1ms
 //
@@ -444,7 +442,8 @@ user_pref("browser.safebrowsing.downloads.remote.block_dangerous", false);
 //
 // Tradeoff: Bypasses security checks entirely, as the network request cannot
 // resolve in 1ms.
-user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 1);
+// user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 1);
+user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 15000);
 
 // Adjust Content Notification Interval: This setting tells Firefox how often to
 // redraw the page while it is still downloading. Delaying the redraw slightly
