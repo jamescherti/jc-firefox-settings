@@ -151,10 +151,17 @@ user_pref("browser.cache.memory.max_entry_size", 51200);  // 50MB per entry.
 // CSS, scripts) every time you launch the browser. The RAM cache is cleared on
 // exit, meaning your initial page loads will always be slower and consume more
 // bandwidth.
-user_pref("browser.cache.disk.enable", true);
+user_pref("browser.cache.disk.enable", false);
 
 // Allow caching of SSL pages on disk
 // user_pref("browser.cache.disk_cache_ssl", true);
+
+// Limit disk cache size.
+// Excessive cache read/write operations can cause lag on mechanical hard drives
+// (HDD). Disabling smart sizing and setting a hard limit (e.g., 256MB) reduces
+// disk I/O.
+user_pref("browser.cache.disk.smart_size.enabled", false);
+user_pref("browser.cache.disk.capacity", 256000);
 
 // Enable usage of enterprise-installed root certificates
 user_pref("security.enterprise_roots.enabled", true);
@@ -573,3 +580,32 @@ user_pref("reader.parse-on-load.enabled", false);
 
 // Disable the built-in spell checker to save CPU cycles and RAM.
 user_pref("layout.spellcheckDefault", 0);
+
+// -----------------------------------------------------------------------------
+// SPEED
+// -----------------------------------------------------------------------------
+// Disable the network predictor.
+// The predictor algorithm consumes CPU cycles and disk I/O when attempting to
+// guess future link clicks based on browsing history.
+user_pref("network.predictor.enabled", false);
+user_pref("network.predictor.enable-prefetch", false);
+
+// Disable link prefetching.
+// Downloading and rendering unvisited pages in the background consumes limited
+// CPU and network resources.
+user_pref("network.prefetch-next", false);
+
+// Disable fullscreen animations.
+// Fullscreen transitions can cause legacy GPUs to drop frames.
+user_pref("browser.fullscreen.animate", false);
+
+// Disable link auditing and web beacons.
+// Prevents the browser from sending background network requests when links are
+// clicked or web pages are closed.
+user_pref("browser.send_pings", false);
+user_pref("beacon.enabled", false);
+
+// Disable Gamepad API.
+// Prevents the browser from continuously polling USB ports and system buses for
+// connected game controllers.
+user_pref("dom.gamepad.enabled", false);
