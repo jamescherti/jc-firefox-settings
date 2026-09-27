@@ -63,14 +63,6 @@
 // Enable automatic tab unloading when system memory is low
 user_pref("browser.tabs.unloadOnLowMemory", true);
 
-// This allows Firefox to preload links the site author explicitly marks as
-// likely to be clicked next
-user_pref("network.prefetch-next", true);
-
-// This allows Firefox to resolve domain names in advance, reducing latency when
-// you click a link
-user_pref("network.dns.disablePrefetch", false);
-
 // Disable the hover picture preview
 user_pref("browser.tabs.hoverPreview.enabled", false);
 
@@ -571,6 +563,24 @@ user_pref("mousewheel.min_line_scroll_amount", 1);
 // Disable smooth scrolling to reduce GPU and CPU rendering loads. Older GPUs
 // often drop frames during smooth scrolling, making the browser feel sluggish.
 user_pref("general.smoothScroll", false);
+
+// -----------------------------------------------------------------------------
+// Prefetch
+// -----------------------------------------------------------------------------
+// This allows Firefox to resolve domain names in advance, reducing latency when
+// you click a link
+user_pref("network.dns.disablePrefetch", false);
+
+// Disable link prefetching.
+// Downloading and rendering unvisited pages in the background consumes limited
+// CPU and network resources.
+user_pref("network.prefetch-next", false);
+
+// Disable the network predictor.
+// The predictor algorithm consumes CPU cycles and disk I/O when attempting to
+// guess future link clicks based on browsing history.
+user_pref("network.predictor.enabled", false);
+user_pref("network.predictor.enable-prefetch", false);
 
 // -----------------------------------------------------------------------------
 // Recently commented out
