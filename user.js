@@ -457,11 +457,19 @@ user_pref("browser.crashReports.unsubmittedCheck.autoSubmit2", false); // [DEFAU
 /** OTHER ***/
 /* 0360: disable Captive Portal detection
  * [1] https://www.eff.org/deeplinks/2017/08/how-captive-portals-interfere-wireless-security-and-privacy ***/
-user_pref("captivedetect.canonicalURL", "");
+// Note: Disabling captive portal detection prevents the browser from
+// automatically routing to login pages on public Wi-Fi networks, requiring
+// manual IP navigation to authenticate.
+// user_pref("captivedetect.canonicalURL", "");
+
 // user_pref("network.captive-portal-service.enabled", false); // [FF52+]
 /* 0361: disable Network Connectivity checks [FF65+]
  * [1] https://bugzilla.mozilla.org/1460537 ***/
-user_pref("network.connectivity-service.enabled", false);
+// Note: Disabling captive portal detection prevents the browser from
+// automatically routing to login pages on public Wi-Fi networks, requiring
+// manual IP navigation to authenticate.
+// user_pref("network.connectivity-service.enabled", false);
+
 /* 0362: enforce disabling of Web Compatibility Reporter [FF56+]
  * Web Compatibility Reporter adds a "Report Site Issue" button to send data to Mozilla ***/
 user_pref("extensions.webcompat-reporter.enabled", false); // [DEFAULT: false]
@@ -534,7 +542,10 @@ user_pref("full-screen-api.warning.timeout", 0);
 
 // This prevents Firefox from spending rendering resources calculating and
 // drawing temporary boxes while waiting for images to download.
-user_pref("browser.display.show_image_placeholders", false);
+// Note: Disabling placeholders stops the rendering engine from reserving
+// physical space for images before they download. This causes severe layout
+// shifts as the page continuously redraws around newly loaded media.
+// user_pref("browser.display.show_image_placeholders", false);
 
 // Disable Firefox recommendation pane in settings.
 // Prevents the browser from fetching and rendering dynamic feature recommendations
@@ -568,7 +579,7 @@ user_pref("general.smoothScroll", false);
 // writes session data (such as open tabs and windows) to disk. This is
 // beneficial for the following reasons: Reduced Disk I/O, Improved Performance,
 // and Power Efficiency.
-user_pref("browser.sessionstore.interval", 60000);
+user_pref("browser.sessionstore.interval", 30000);
 
 // The preference network.http.speculative-parallel-limit controls the number of
 // speculative (or preemptive) parallel HTTP connections that Firefox is allowed
