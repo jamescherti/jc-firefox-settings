@@ -160,8 +160,7 @@ user_pref("browser.cache.disk.enable", true);
 // Excessive cache read/write operations can cause lag on mechanical hard drives
 // (HDD). Disabling smart sizing and setting a hard limit (e.g., 256MB) reduces
 // disk I/O.
-user_pref("browser.cache.disk.smart_size.enabled", false);
-user_pref("browser.cache.disk.capacity", 256000);
+// user_pref("browser.cache.disk.capacity", 256000);
 
 // Enable usage of enterprise-installed root certificates
 user_pref("security.enterprise_roots.enabled", true);
@@ -572,12 +571,6 @@ user_pref("general.smoothScroll", false);
 // -----------------------------------------------------------------------------
 // CPU OVERHEAD REDUCTION
 // -----------------------------------------------------------------------------
-// Disable Reader View parsing on page load. Firefox parses every loaded page
-// in the background to determine if it can be displayed in Reader View.
-// Disabling this saves CPU cycles on older dual-core processors.
-// TODO old hardware only
-user_pref("reader.parse-on-load.enabled", false);
-
 // Disable the built-in spell checker to save CPU cycles and RAM.
 user_pref("layout.spellcheckDefault", 0);
 
@@ -609,11 +602,11 @@ user_pref("browser.fullscreen.animate", false);
 // legacy network interfaces and basic routers from dropping packets due to
 // connection saturation.
 //
-// TODO: Network Bottlenecks: Capping concurrent HTTP connections to 256
+// TODO: Network Bottlenecks: Cap concurrent HTTP connections
 // (network.http.max-connections) restricts the browser from fetching multiple
 // assets simultaneously on heavy web pages. Modern network interfaces and
 // routers handle the default limit of 900 without issue.
-user_pref("network.http.max-connections", 256);
+user_pref("network.http.max-connections", 450);
 
 // Reduce the number of closed tabs and windows retained in memory.
 // The default is to remember 25 closed tabs and 3 closed windows. Lowering
