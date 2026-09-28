@@ -165,6 +165,15 @@ update_firefox_config() {
 
             } >>"$dest_dir/user.js"
           fi
+
+          local local_user_js="$HOME/.firefox-local-user.js"
+          if [[ -f "$local_user_js" ]]; then
+            echo "[INSTALL] Appending $local_user_js to $dest_dir/user.js"
+            echo "" >>"$dest_dir/user.js"
+            echo "// --- Local user.js overrides ---" >>"$dest_dir/user.js"
+            cat "$local_user_js" >>"$dest_dir/user.js"
+          fi
+
         else
           echo "[IGNORED] $dest_dir (no storage.sqlite)"
         fi
