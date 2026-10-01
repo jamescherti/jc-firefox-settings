@@ -65,7 +65,7 @@ update_firefox_config() {
           # install script sets this to the thread count (4 on a T420s). Setting
           # this explicitly to 2 will significantly reduce RAM usage if the
           # machine has 4GB or 8GB of RAM.
-          local process_count=$(($(nproc) / 2))
+          local process_count=$(($(nproc) - 1))
           if [[ "$process_count" -lt 1 ]]; then
             process_count=1
           fi

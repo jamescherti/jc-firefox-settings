@@ -68,7 +68,7 @@ user_pref("privacy.trackingprotection.socialtracking.enabled", false);
 //
 // Tradeoff: Setting a hard limit forces layout thrashing on complex pages,
 // increasing CPU usage and potentially extending total load time.
-user_pref("nglayout.initialpaint.delay", 10);
+user_pref("nglayout.initialpaint.delay", 7);
 
 // Enable automatic tab unloading when system memory is low.
 //
@@ -77,7 +77,7 @@ user_pref("nglayout.initialpaint.delay", 10);
 //
 // Tradeoff: Switching back to an unloaded tab requires a full page reload,
 // consuming network bandwidth and delaying access.
-user_pref("browser.tabs.unloadOnLowMemory", true);
+user_pref("browser.tabs.unloadOnLowMemory", false);
 
 // Disable the hover picture preview.
 //
@@ -181,7 +181,7 @@ user_pref("browser.cache.memory.capacity", -1);
 //
 // Tradeoff: Can cause rapid cache eviction of smaller files if a few large
 // assets consume the entire cache capacity.
-user_pref("browser.cache.memory.max_entry_size", 10000);
+user_pref("browser.cache.memory.max_entry_size", 7000);
 
 // Disabling the disk cache forces Firefox to re-download static assets (images,
 // CSS, scripts) every time you launch the browser. The RAM cache is cleared on
@@ -862,7 +862,11 @@ user_pref("extensions.webcompat-reporter.enabled", false); // [DEFAULT: false]
 //
 // Tradeoff: Can cause severe visual artifacts, crashes, or high CPU usage if
 // the underlying graphics driver is unsupported or buggy.
-user_pref("gfx.webrender.all", true);
+//
+// NOTE: Disabled. Forcing WebRender globally bypasses Mozilla's hardware
+// capability checks and blocklists. On systems with legacy or unsupported GPU
+// drivers, this causes high CPU overhead, frame drops, and graphical lag.
+// user_pref("gfx.webrender.all", true);
 
 // Recent versions of Firefox require the force flag for VA-API to function
 // correctly on NVIDIA hardware.
