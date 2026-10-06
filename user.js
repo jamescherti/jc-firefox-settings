@@ -68,7 +68,7 @@ user_pref("privacy.trackingprotection.socialtracking.enabled", false);
 //
 // Tradeoff: Setting a hard limit forces layout thrashing on complex pages,
 // increasing CPU usage and potentially extending total load time.
-user_pref("nglayout.initialpaint.delay", 7);
+user_pref("nglayout.initialpaint.delay", 5);
 
 // Enable automatic tab unloading when system memory is low.
 //
