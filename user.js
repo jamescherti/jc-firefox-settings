@@ -903,7 +903,7 @@ user_pref("media.hardware-video-decoding.enabled", true);
 //
 // Tradeoff: Users must rely on external tools or careful typing, as misspelled
 // words will no longer be highlighted in text boxes.
-user_pref("layout.spellcheckDefault", 0);
+user_pref("layout.spellcheckDefault", 1);
 
 // -----------------------------------------------------------------------------
 // UI
