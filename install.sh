@@ -80,6 +80,15 @@ update_firefox_config() {
               >>"$dest_dir/user.js"
           fi
 
+          if ((CPU_GEN < 7)); then
+            # Disable Reader View parsing on page load. Firefox parses every
+            # loaded page in the background to determine if it can be
+            # displayed in Reader View. Disabling this saves CPU cycles on
+            # older dual-core processors.
+            echo 'user_pref("reader.parse-on-load.enabled", false);' \
+              >>"$dest_dir/user.js"
+          fi
+
           if [[ "$VIDEO_CARD" == "nvidia" ]]; then
             {
               # On NVIDIA GPUs, recent drivers may require this flag to enable
@@ -127,8 +136,6 @@ update_firefox_config() {
             } >>"$dest_dir/user.js"
           elif [[ "$VIDEO_CARD" == "intel" ]]; then
             {
-              echo 'user_pref("gfx.webrender.all", true);'
-
               echo 'user_pref("media.hardware-video-decoding.force-enabled",' \
                 'false);'
 
@@ -159,12 +166,6 @@ update_firefox_config() {
               # cool, and responsive media playback.
               # VP9 hardware decoding became standard in 7th Gen
               if ((CPU_GEN < 7)); then
-                # Disable Reader View parsing on page load. Firefox parses every
-                # loaded page in the background to determine if it can be
-                # displayed in Reader View. Disabling this saves CPU cycles on
-                # older dual-core processors.
-                echo 'user_pref("reader.parse-on-load.enabled", false);'
-
                 echo 'user_pref("media.mediasource.vp9.enabled", false);'
               fi
 
@@ -212,9 +213,13 @@ detect_cpu_gen() {
     elif ((${#model_num} >= 5)); then
       CPU_GEN="${model_num:0:2}"
     fi
-  elif echo "$cpu_model" | grep -iqE 'Core.*(2|Duo|Quad)'; then
-    # Legacy pre-Core i-series hardware (e.g., Core 2 Duo)
+  elif echo "$cpu_model" | grep -iqE 'Core.*Ultra'; then
+    CPU_GEN=14
+  elif echo "$cpu_model" | grep -iqE 'Core.*(2|Duo|Quad)|Atom'; then
     CPU_GEN=1
+  elif [[ -r /proc/cpuinfo ]] && [[ "$(uname -m)" == "x86_64" || "$(uname -m)" == i?86 ]] \
+    && ! grep -qw 'avx2' /proc/cpuinfo 2>/dev/null; then
+    CPU_GEN=3
   fi
 }
 

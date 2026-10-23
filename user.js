@@ -77,7 +77,7 @@ user_pref("nglayout.initialpaint.delay", 250);
 //
 // Tradeoff: Switching back to an unloaded tab requires a full page reload,
 // consuming network bandwidth and delaying access.
-user_pref("browser.tabs.unloadOnLowMemory", false);
+user_pref("browser.tabs.unloadOnLowMemory", true);
 
 // Disable the hover picture preview.
 //
@@ -1185,8 +1185,7 @@ user_pref("browser.sessionstore.interval", 30000);
 ///
 // Tradeoff: Increases perceived latency when a user clicks a link, as the
 // browser must perform the TCP handshake from scratch.
-// TODO
-user_pref("network.http.speculative-parallel-limit", 10);
+user_pref("network.http.speculative-parallel-limit", 20);
 
 // Increase the cache size for accelerated canvas items
 // These override current defaults of 8192 and 256 MiB respectively. Increasing

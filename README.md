@@ -3,6 +3,10 @@
 
 This project provides the a **user.js** file, which holds James Cherti's settings to customize the Firefox web browser to enhance the user experience and security.
 
+## Author and License
+
+The `jc-firefox-settings` tool has been written by [James Cherti](https://www.jamescherti.com/) and is distributed under terms of the MIT license.
+
 ## Requirements
 
 - Firefox
@@ -26,10 +30,6 @@ Run the script to configure Firefox:
 ```
 cp user.js ~/.mozilla/firefox/YOURDIR.NAME/user.js
 ```
-
-## Author and License
-
-The `jc-firefox-settings` tool has been written by [James Cherti](https://www.jamescherti.com/) and is distributed under terms of the MIT license.
 
 ## Links
 
