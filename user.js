@@ -68,7 +68,7 @@ user_pref("privacy.trackingprotection.socialtracking.enabled", false);
 //
 // Tradeoff: Setting a hard limit forces layout thrashing on complex pages,
 // increasing CPU usage and potentially extending total load time.
-user_pref("nglayout.initialpaint.delay", 5);
+user_pref("nglayout.initialpaint.delay", 250);
 
 // Enable automatic tab unloading when system memory is low.
 //
@@ -455,7 +455,7 @@ user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 15000);
 // Tradeoff: These settings are obsolete for modern networks and engines; keeping them can interfere with Firefox's current optimized layout pacing.
 // TODO
 user_pref("content.notify.ontimer", true);
-user_pref("content.notify.interval", 100000);  // Time in microseconds.
+user_pref("content.notify.interval", 120000);  // Time in microseconds.
 
 //--------------------------------------------------------------------------------
 /*** [SECTION 0800]: LOCATION BAR / SEARCH BAR / SUGGESTIONS / HISTORY / FORMS ***/
@@ -925,6 +925,7 @@ user_pref("layout.spellcheckDefault", 1);
 // Tradeoff: Results in abrupt visual changes that can make the interface feel
 // jarring or less polished.
 user_pref("toolkit.cosmeticAnimations.enabled", false);
+user_pref("ui.prefersReducedMotion", 1);
 
 // Disable tab opening and closing animations
 //

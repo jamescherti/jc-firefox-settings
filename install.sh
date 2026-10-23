@@ -65,13 +65,20 @@ update_firefox_config() {
           # install script sets this to the thread count (4 on a T420s). Setting
           # this explicitly to 2 will significantly reduce RAM usage if the
           # machine has 4GB or 8GB of RAM.
-          # local process_count=$(($(nproc) - 1))
-          local process_count=$(nproc)
-          if [[ "$process_count" -lt 1 ]]; then
-            process_count=1
+          local process_count
+          process_count=$(($(nproc) - 1))
+          if [[ "$process_count" -lt 2 ]]; then
+            process_count=2
+          elif [[ "$process_count" -gt 8 ]]; then
+            process_count=8
           fi
           echo "user_pref(\"dom.ipc.processCount\", ${process_count});" \
             >>"$dest_dir/user.js"
+
+          if ((CPU_GEN < 8)); then
+            echo 'user_pref("dom.ipc.processCount.webIsolated", 2);' \
+              >>"$dest_dir/user.js"
+          fi
 
           if [[ "$VIDEO_CARD" == "nvidia" ]]; then
             {
@@ -120,6 +127,8 @@ update_firefox_config() {
             } >>"$dest_dir/user.js"
           elif [[ "$VIDEO_CARD" == "intel" ]]; then
             {
+              echo 'user_pref("gfx.webrender.all", true);'
+
               echo 'user_pref("media.hardware-video-decoding.force-enabled",' \
                 'false);'
 
@@ -217,12 +226,14 @@ main() {
 
   # Detect the video card type
   if command -v lspci >/dev/null 2>&1; then
-    if lspci | grep -i vga | grep -iq nvidia; then
+    local gpu_info
+    gpu_info=$(lspci | grep -iE 'vga|3d|display' || true)
+    if echo "$gpu_info" | grep -iq nvidia; then
       VIDEO_CARD=nvidia
       echo "[INFO] NVIDIA GPU detected." \
         "Applying hardware-specific configuration."
       echo
-    elif lspci | grep -i vga | grep -iq intel; then
+    elif echo "$gpu_info" | grep -iq intel; then
       VIDEO_CARD=intel
       echo "[INFO] Intel GPU detected." \
         "Applying hardware-specific configuration."

@@ -9,23 +9,23 @@ This project provides the a **user.js** file, which holds James Cherti's setting
 
 ## Usage
 
-1. Clone the repository:
+Clone the repository:
 
-   ```
-   git clone https://github.com/jamescherti/jc-firefox-settings
-   ```
+```
+git clone https://github.com/jamescherti/jc-firefox-settings
+```
 
-2. Navigate to the repository directory:
+Navigate to the repository directory:
 
-   ```
-   cd jc-firefox-settings
-   ```
+```
+cd jc-firefox-settings
+```
 
-3. Run the script to configure Firefox:
+Run the script to configure Firefox:
 
-   ```
-   cp user.js ~/.mozilla/firefox/YOURDIR.NAME/user.js
-   ```
+```
+cp user.js ~/.mozilla/firefox/YOURDIR.NAME/user.js
+```
 
 ## Author and License
 
