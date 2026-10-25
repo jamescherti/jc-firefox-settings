@@ -4,7 +4,7 @@
 - Author: James Cherti <[https://www.jamescherti.com/](https://www.jamescherti.com/)>
 - License: MIT
 
-The [jc-firefox-settings @GitHub](https://github.com/jamescherti/jc-firefox-settings) provides the a **user.js** file, which holds James Cherti's settings to customize the Firefox web browser to enhance the user experience and security.
+The [jc-firefox-settings](https://github.com/jamescherti/jc-firefox-settings) provides the a **user.js** file, which holds James Cherti's settings to customize the Firefox web browser to enhance the user experience and security.
 
 ## Author and License
 
