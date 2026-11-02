@@ -96,11 +96,11 @@ update_firefox_config() {
               # some Intel GPUs) can lead to browser instability, crashes, or
               # black frames during video playback.
               echo 'user_pref("media.hardware-video-decoding.force-enabled",' \
-                'true);'
+                'false);'
 
               # Configure the EGL backend and DMA-BUF sharing, which the
               # proprietary NVIDIA driver expects.
-              echo 'user_pref("gfx.x11-egl.force-enabled", true);'
+              echo 'user_pref("gfx.x11-egl.force-enabled", false);'
 
               # On NVIDIA, keep the webrender compositor false because it is
               # highly unstable and frequently causes crashes.
