@@ -66,7 +66,7 @@ update_firefox_config() {
           # this explicitly to 2 will significantly reduce RAM usage if the
           # machine has 4GB or 8GB of RAM.
           local process_count
-          process_count=$(($(nproc) - 1))
+          process_count=$(nproc --ignore 1)
           if [[ "$process_count" -lt 2 ]]; then
             process_count=2
           elif [[ "$process_count" -gt 8 ]]; then
