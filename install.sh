@@ -230,7 +230,7 @@ main() {
   cd "$SCRIPT_DIR"
 
   # Detect the video card type
-  if command -v lspci >/dev/null 2>&1; then
+  if command -v lspci &>/dev/null; then
     local gpu_info
     gpu_info=$(lspci | grep -iE 'vga|3d|display' || true)
     if echo "$gpu_info" | grep -iq nvidia; then
