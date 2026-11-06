@@ -55,6 +55,32 @@ user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
 user_pref("privacy.trackingprotection.pbmode.enabled", false);
 user_pref("privacy.trackingprotection.socialtracking.enabled", false);
 
+// What is tracking annotation?
+// Tracking annotation is a background mechanism in Firefox's network stack that
+// compares every single outgoing network request (scripts, images, beacons)
+// against built-in tracking lists (such as Disconnect) in real-time as the page
+// loads.
+//
+// Why does Firefox do it?
+// Even when built-in tracker *blocking* is turned off, Firefox runs this
+// annotation step so it can silently "tag" (annotate) requests internally.
+// Firefox uses these internal tags for three specific reasons:
+// 1. To populate the address bar shield icon (showing you what trackers are present).
+// 2. To display tracker classifications in the Web Developer Tools Network panel.
+// 3. To optionally lower the CPU/network priority of tracking scripts so they
+//    don't steal bandwidth from the actual website content (controlled by
+//    privacy.trackingprotection.lower_network_priority).
+//
+// Benefit: Eliminates the CPU, memory, and per-request latency overhead of
+// running this background tagging engine. If you use uBlock Origin, uBlock
+// already categorizes and blocks everything, making Firefox's internal tagging
+// completely redundant.
+//
+// Tradeoff: You lose native UI indicators (the shield icon won't correctly
+// reflect tracker presence) and DevTools will no longer label third-party
+// requests as trackers.
+user_pref("privacy.trackingprotection.annotate_channels", false);
+
 // This preference sets the initial paint delay in milliseconds for Firefox's
 // rendering engine. It means Firefox will wait before starting to render the
 // content of a web page after receiving the first data from the server. A very
@@ -68,7 +94,7 @@ user_pref("privacy.trackingprotection.socialtracking.enabled", false);
 //
 // Tradeoff: Setting a hard limit forces layout thrashing on complex pages,
 // increasing CPU usage and potentially extending total load time.
-user_pref("nglayout.initialpaint.delay", 250);
+user_pref("nglayout.initialpaint.delay", 5);
 
 // Enable automatic tab unloading when system memory is low.
 //
