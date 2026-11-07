@@ -78,8 +78,8 @@ update_firefox_config() {
           # Prevent older machines from spawning excessive Fission processes per site
           if ((CPU_GEN < 8)); then
             local isolated_count=$((process_count / 2))
-            if [[ "$isolated_count" -lt 2 ]]; then
-              isolated_count=2
+            if [[ "$isolated_count" -lt 4 ]]; then
+              isolated_count=4
             fi
             echo "user_pref(\"dom.ipc.processCount.webIsolated\", ${isolated_count});" \
               >>"$dest_dir/user.js"
