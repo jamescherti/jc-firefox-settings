@@ -475,12 +475,23 @@ user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 15000);
 // redraw the page while it is still downloading. Delaying the redraw slightly
 // can reduce CPU load and layout recalculations on heavy pages.
 //
-// NOTE: Commented out. These are obsolete settings from the dial-up era. They
+// NOTE: Disabled. These are obsolete settings from the dial-up era. They
 // have no positive effect on modern network stacks or rendering engines.
-// Benefit: Adjusting redraw intervals could historically reduce CPU spikes on very slow network connections by batching rendering updates.
-// Tradeoff: These settings are obsolete for modern networks and engines; keeping them can interfere with Firefox's current optimized layout pacing.
-// TODO
-user_pref("content.notify.ontimer", true);
+// Benefit: Adjusting redraw intervals could historically reduce CPU spikes on
+// very slow network connections by batching rendering updates.
+// Tradeoff: These settings are obsolete for modern networks and engines;
+// keeping them can interfere with Firefox's current optimized layout pacing.
+//
+// Why it hurts: These are legacy Gecko layout engine timers from early Firefox
+// versions. They force the layout engine to pace reflows every 120ms during
+// content delivery.
+//
+// The Gemini conflict: Gemini does not load static HTML; it streams tokens
+// dynamically over HTTP and continuously injects nodes into the DOM. Forcing
+// artificial 120ms reflow timers during real-time streaming leads to layout
+// stutter, frame pacing drops, and micro-freezes while typing or receiving
+// responses.
+user_pref("content.notify.ontimer", false);
 user_pref("content.notify.interval", 120000);  // Time in microseconds.
 
 //--------------------------------------------------------------------------------

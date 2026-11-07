@@ -75,10 +75,10 @@ update_firefox_config() {
           echo "user_pref(\"dom.ipc.processCount\", ${process_count});" \
             >>"$dest_dir/user.js"
 
-          if ((CPU_GEN < 8)); then
-            echo 'user_pref("dom.ipc.processCount.webIsolated", 2);' \
-              >>"$dest_dir/user.js"
-          fi
+          # if ((CPU_GEN < 8)); then
+          #   echo 'user_pref("dom.ipc.processCount.webIsolated", 4);' \
+          #     >>"$dest_dir/user.js"
+          # fi
 
           if ((CPU_GEN < 7)); then
             # Disable Reader View parsing on page load. Firefox parses every
@@ -100,7 +100,7 @@ update_firefox_config() {
 
               # Configure the EGL backend and DMA-BUF sharing, which the
               # proprietary NVIDIA driver expects.
-              echo 'user_pref("gfx.x11-egl.force-enabled", false);'
+              echo 'user_pref("gfx.x11-egl.force-enabled", true);'
 
               # On NVIDIA, keep the webrender compositor false because it is
               # highly unstable and frequently causes crashes.
@@ -147,7 +147,7 @@ update_firefox_config() {
               # While NVIDIA historically needed this forced due to driver
               # quirks, forcing it on Intel is redundant and can occasionally
               # cause instability.
-              echo 'user_pref("gfx.x11-egl.force-enabled", false);'
+              echo 'user_pref("gfx.x11-egl.force-enabled", true);'
 
               # Enable WebRender Compositor: This shifts more of the page
               # composition workload to the GPU, freeing up the CPU and
