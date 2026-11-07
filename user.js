@@ -492,7 +492,6 @@ user_pref("browser.safebrowsing.downloads.remote.timeout_ms", 15000);
 // stutter, frame pacing drops, and micro-freezes while typing or receiving
 // responses.
 user_pref("content.notify.ontimer", false);
-user_pref("content.notify.interval", 120000);  // Time in microseconds.
 
 //--------------------------------------------------------------------------------
 /*** [SECTION 0800]: LOCATION BAR / SEARCH BAR / SUGGESTIONS / HISTORY / FORMS ***/

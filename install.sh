@@ -75,10 +75,15 @@ update_firefox_config() {
           echo "user_pref(\"dom.ipc.processCount\", ${process_count});" \
             >>"$dest_dir/user.js"
 
-          # if ((CPU_GEN < 8)); then
-          #   echo 'user_pref("dom.ipc.processCount.webIsolated", 4);' \
-          #     >>"$dest_dir/user.js"
-          # fi
+          # Prevent older machines from spawning excessive Fission processes per site
+          if ((CPU_GEN < 8)); then
+            local isolated_count=$((process_count / 2))
+            if [[ "$isolated_count" -lt 2 ]]; then
+              isolated_count=2
+            fi
+            echo "user_pref(\"dom.ipc.processCount.webIsolated\", ${isolated_count});" \
+              >>"$dest_dir/user.js"
+          fi
 
           if ((CPU_GEN < 7)); then
             # Disable Reader View parsing on page load. Firefox parses every
@@ -100,6 +105,14 @@ update_firefox_config() {
 
               # Configure the EGL backend and DMA-BUF sharing, which the
               # proprietary NVIDIA driver expects.
+              #
+              # NVIDIA relies on proprietary Linux drivers that
+              # historically lacked standard EGL and Generic Buffer Management
+              # (GBM) support, favoring legacy GLX or EGLStreams instead.
+              # Because of this unstable history, Firefox's default safety
+              # checks are highly conservative and often blocklist NVIDIA on
+              # X11, forcing the browser to fall back to legacy GLX or CPU-bound
+              # Software WebRender to prevent crashes.
               echo 'user_pref("gfx.x11-egl.force-enabled", true);'
 
               # On NVIDIA, keep the webrender compositor false because it is
@@ -139,15 +152,19 @@ update_firefox_config() {
               echo 'user_pref("media.hardware-video-decoding.force-enabled",' \
                 'false);'
 
-              # Intel relies on the open-source Mesa graphics drivers, which
-              # have provided robust EGL support for years. Because of this,
-              # Firefox automatically detects and enables EGL on Intel setups
-              # perfectly on its own. Using a "force" flag overrides the
-              # built-in safety checks and fallback mechanisms of the browser.
-              # While NVIDIA historically needed this forced due to driver
-              # quirks, forcing it on Intel is redundant and can occasionally
-              # cause instability.
-              echo 'user_pref("gfx.x11-egl.force-enabled", true);'
+              # Intel uses the open-source Mesa graphics stack. Firefox is
+              # explicitly designed to recognize Mesa drivers and automatically
+              # enables EGL and WebRender natively without user intervention.
+              #
+              # If you set gfx.x11-egl.force-enabled to true on Intel hardware,
+              # you disable Firefox's built-in safety fallbacks. If a specific
+              # Intel Mesa driver update introduces a rendering bug or memory
+              # leak, Firefox normally detects this and gracefully falls back to
+              # a stable rendering path. Forcing the flag strips away that
+              # safety net, converting minor driver quirks into hard browser
+              # crashes. Removing the override allows Firefox to manage the
+              # Intel graphics pipeline exactly as engineered.
+              echo 'user_pref("gfx.x11-egl.force-enabled", false);'
 
               # Enable WebRender Compositor: This shifts more of the page
               # composition workload to the GPU, freeing up the CPU and
