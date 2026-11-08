@@ -45,41 +45,124 @@
 //
 // Tradeoff: If the extension is disabled or fails, the browser lacks native
 // fallback protection against tracking.
+
+// What it does: Sets cookie handling to accept all cookies without
+// restrictions.
+// Impact on tracking protection: Disables Firefox's Total Cookie Protection
+// (dFPI / state partitioning, which is mode 5 by default) and prevents
+// cross-site tracker cookie blocking (mode 4). It stops Firefox from
+// partitioning or blocking storage based on tracking lists.
 user_pref("network.cookie.cookieBehavior", 0);
+
+user_pref("browser.contentblocking.category", "custom");
+
+// -----------------------------------------------------------------------------
+// TRACKING PROTECTION & CLASSIFIER ENGINE SHUTDOWN
+// -----------------------------------------------------------------------------
+// Disabling Firefox built-in tracking protection and URL classifier pipeline.
+//
+// Background:
+// Firefox ships with built-in Enhanced Tracking Protection (ETP) backed by
+// Disconnect blocklists, dynamic state partitioning (Total Cookie Protection /
+// dFPI), bounce tracking purges, and network channel annotation routines.
+//
+// When a dedicated content blocker like uBlock Origin is present, running
+// Firefox's native tracking protection engines creates redundant work:
+//
+// 1. Redundant list lookups: Every outgoing HTTP/HTTPS channel is evaluated
+//    against Disconnect tables inside Gecko's network layer, only for uBlock
+//    Origin to inspect and match the exact same requests against EasyPrivacy
+//    and Peter Lowe lists.
+// 2. Storage isolation overhead: Total Cookie Protection (cookieBehavior = 5)
+//    maintains separate IndexedDB, localStorage, and cookie jars for every
+//    first-party context. On complex web apps like Gmail or Reddit that write
+//    frequently to client-side storage, maintaining partitioned state engines
+//    increases disk I/O and memory pressure.
+// 3. Periodic background tasks: Bounce tracking protection (mode 3) runs
+//    periodic timer loops to inspect and purge storage from redirect hosts.
+// 4. Channel tagging: Annotating network channels forces Firefox to label
+//    trackers for the address bar shield UI and DevTools Network tab, even
+//    when native blocking is inactive.
+//
+// Benefits:
+// - Lower CPU utilization during heavy DOM updates, scrolling, and infinite-load
+//   navigation on script-heavy sites (e.g., Reddit, Gmail).
+// - Reduces disk write volume and memory allocation by disabling state
+//   partitioning and background storage sweeps.
+// - Eliminates cross-domain authentication friction and redirect loop issues
+//   with federated logins (e.g., Google accounts across Search, Mail, and YouTube).
+// - Single source of truth: All request inspection and filtering is offloaded
+//   exclusively to uBlock Origin.
+//
+// Tradeoffs:
+// - Zero fallback defense: If uBlock Origin is disabled, crashes, or runs in
+//   Troubleshoot Mode, the browser accepts all first-party and third-party
+//   cookies without isolation or list filtering.
+// - Address bar shield UI remains permanently idle and DevTools will not flag
+//   tracking endpoints.
+// -----------------------------------------------------------------------------
+// Core Enhanced Tracking Protection (ETP) engines
+user_pref("privacy.trackingprotection.enabled", false);
+user_pref("privacy.trackingprotection.pbmode.enabled", false);
+user_pref("privacy.trackingprotection.cryptomining.enabled", false);
+user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
+user_pref("privacy.trackingprotection.socialtracking.enabled", false);
 user_pref("privacy.trackingprotection.emailtracking.enabled", false);
 user_pref("privacy.trackingprotection.emailtracking.pbmode.enabled", false);
-user_pref("browser.contentblocking.category", "custom");
-user_pref("privacy.trackingprotection.cryptomining.enabled", false);
-user_pref("privacy.trackingprotection.enabled", false);
-user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
-user_pref("privacy.trackingprotection.pbmode.enabled", false);
-user_pref("privacy.trackingprotection.socialtracking.enabled", false);
+user_pref("privacy.trackingprotection.emailtracking.data_collection.enabled", false);
 
-// What is tracking annotation?
-// Tracking annotation is a background mechanism in Firefox's network stack that
-// compares every single outgoing network request (scripts, images, beacons)
-// against built-in tracking lists (such as Disconnect) in real-time as the page
-// loads.
-//
-// Why does Firefox do it?
-// Even when built-in tracker *blocking* is turned off, Firefox runs this
-// annotation step so it can silently "tag" (annotate) requests internally.
-// Firefox uses these internal tags for three specific reasons:
-// 1. To populate the address bar shield icon (showing you what trackers are present).
-// 2. To display tracker classifications in the Web Developer Tools Network panel.
-// 3. To optionally lower the CPU/network priority of tracking scripts so they
-//    don't steal bandwidth from the actual website content (controlled by
-//    privacy.trackingprotection.lower_network_priority).
-//
-// Benefit: Eliminates the CPU, memory, and per-request latency overhead of
-// running this background tagging engine. If you use uBlock Origin, uBlock
-// already categorizes and blocks everything, making Firefox's internal tagging
-// completely redundant.
-//
-// Tradeoff: You lose native UI indicators (the shield icon won't correctly
-// reflect tracker presence) and DevTools will no longer label third-party
-// requests as trackers.
+// Network channel annotation and classifier tagging
 user_pref("privacy.trackingprotection.annotate_channels", false);
+user_pref("privacy.trackingprotection.defer_annotation.enabled", false);
+user_pref("privacy.trackingprotection.lower_network_priority", false);
+user_pref("privacy.trackingprotection.urlclassifier.disable_for_channel_classifier", true);
+
+// Content protection and annotation engine dispatch
+user_pref("privacy.trackingprotection.content.protection.enabled", false);
+user_pref("privacy.trackingprotection.content.annotation.enabled", false);
+user_pref("privacy.trackingprotection.content.mirror.mode", 0);
+
+// Anti-fraud and consent manager channel annotators
+user_pref("privacy.trackingprotection.antifraud.annotate_channels", false);
+user_pref("privacy.trackingprotection.consentmanager.annotate_channels", false);
+
+// Bounce tracking protection (0 = disabled, 1 = dry-run/logging, 3 = purge)
+user_pref("privacy.bounceTrackingProtection.mode", 0);
+
+// ETP Allow-list mechanics
+user_pref("privacy.trackingprotection.allow_list.baseline.enabled", false);
+user_pref("privacy.trackingprotection.allow_list.convenience.enabled", false);
+
+// Optional: Prevent Firefox Sync from re-enabling ETP flags across linked devices
+user_pref("services.sync.prefs.sync.privacy.trackingprotection.enabled", false);
+user_pref("services.sync.prefs.sync.privacy.trackingprotection.pbmode.enabled", false);
+user_pref("services.sync.prefs.sync.privacy.trackingprotection.cryptomining.enabled", false);
+user_pref("services.sync.prefs.sync.privacy.trackingprotection.fingerprinting.enabled", false);
+
+// Disable Firefox View.
+//
+// Benefit: Firefox View is a dedicated UI page that constantly runs in the
+// background to poll for recently closed tabs and synced tabs from other
+// devices. Removing it frees up memory and stops background polling.
+//
+// Tradeoff: You lose the Firefox View button in the tab bar and cannot easily
+// pull up tabs from your smartphone.
+user_pref("browser.tabs.firefox-view", false);
+user_pref("browser.tabs.firefox-view-next", false);
+
+// Disable Web Notifications and Push API.
+//
+// Benefit: Web applications like Gmail and Reddit use Service Workers and the
+// Push API to keep persistent WebSocket connections open to Mozilla's servers so
+// they can deliver desktop notifications even when you are not actively looking
+// at the tab. Disabling these APIs completely stops websites from spawning these
+// background workers and halts the constant notification permission prompts.
+//
+// Tradeoff: You will not receive desktop notifications for new emails in Gmail
+// or new replies on Reddit.
+user_pref("dom.webnotifications.enabled", false);
+user_pref("dom.webnotifications.serviceworker.enabled", false);
+user_pref("dom.push.enabled", false);
 
 // This preference sets the initial paint delay in milliseconds for Firefox's
 // rendering engine. It means Firefox will wait before starting to render the
@@ -841,33 +924,29 @@ user_pref("browser.crashReports.unsubmittedCheck.enabled", false); // [FF51+] [D
 // identify systemic issues.
 user_pref("browser.crashReports.unsubmittedCheck.autoSubmit2", false); // [DEFAULT: false]
 
-/** OTHER ***/
-/* 0360: disable Captive Portal detection
- * [1] https://www.eff.org/deeplinks/2017/08/how-captive-portals-interfere-wireless-security-and-privacy ***/
-// Note: Disabling captive portal detection prevents the browser from
-// automatically routing to login pages on public Wi-Fi networks, requiring
-// manual IP navigation to authenticate.
+// Disable Network Connectivity and Captive Portal Polling.
 //
-// Benefit: Prevents the browser from constantly pinging external servers to
-// check for internet connectivity, reducing background network noise.
+// Benefit: Firefox periodically pings Mozilla servers (e.g., detectportal.firefox.com)
+// in the background to verify if you have an active internet connection or if
+// you are trapped behind a public Wi-Fi login screen. Disabling these stops
+// the background network noise and timer wakes.
 //
-// Tradeoff: The browser will not automatically route to login pages on public
-// Wi-Fi networks, requiring manual IP navigation to authenticate.
-// user_pref("captivedetect.canonicalURL", "");
+// Tradeoff: If you take this computer to a coffee shop or hotel, Firefox will
+// not automatically redirect you to the Wi-Fi login page. You will have to
+// manually type an HTTP IP address (like 1.1.1.1) to trigger the login portal.
+user_pref("network.captive-portal-service.enabled", false);
+user_pref("network.connectivity-service.enabled", false);
 
-// user_pref("network.captive-portal-service.enabled", false); // [FF52+]
-/* 0361: disable Network Connectivity checks [FF65+]
- * [1] https://bugzilla.mozilla.org/1460537 ***/
-// Note: Disabling captive portal detection prevents the browser from
-// automatically routing to login pages on public Wi-Fi networks, requiring
-// manual IP navigation to authenticate.
+// Disable WebRTC background device enumeration.
 //
-// Benefit: Stops Firefox from making periodic connections to Mozilla servers to
-// verify DNS and network status.
+// Benefit: Prevents Firefox from polling the operating system for a list of
+// connected microphones and webcams when you visit a site, which can cause
+// micro-stutters on older hardware.
 //
-// Tradeoff: Firefox may fail to gracefully handle network transitions, such as
-// switching from Wi-Fi to a VPN.
-// user_pref("network.connectivity-service.enabled", false);
+// Tradeoff: Web-based video conferencing (like Google Meet) may require you to
+// manually select your camera/microphone or may fail to initialize. If you do
+// not use web conferencing on this computer, there is no downside.
+user_pref("media.navigator.enabled", false);
 
 /* 0362: enforce disabling of Web Compatibility Reporter [FF56+]
  * Web Compatibility Reporter adds a "Report Site Issue" button to send data to Mozilla ***/
@@ -1202,26 +1281,17 @@ user_pref("browser.newtabpage.activity-stream.default.sites", "");
 // Tradeoff: If the browser crashes, the user is more likely to lose recent tab history or window state changes made within that extended interval.
 user_pref("browser.sessionstore.interval", 30000);
 
-// The preference network.http.speculative-parallel-limit controls the number of
-// speculative (or preemptive) parallel HTTP connections that Firefox is allowed
-// to open to a server when the user hovers over or starts interacting with a
-// link (e.g., typing in the address bar, or mousing over suggestions).
+// Disable Speculative Parallel Connections.
 //
-// Firefox uses speculative connections to reduce perceived latency: it opens
-// TCP connections before the user actually clicks a link, under the assumption
-// that they will visit that site.
+// Benefit: When you hover your mouse cursor over a link on a website (like a
+// Reddit thread), Firefox proactively performs DNS lookups and establishes TCP
+// handshakes with the destination server before you even click. Setting this to
+// 0 stops this behavior, saving CPU interrupts, socket allocations, and network
+// bandwidth.
 //
-// Setting this value to 0 disables speculative connections entirely.
-//
-// Firefox currently defaults it to 20. A lower value is not an optimization; it
-// restricts speculative connections and can increase perceived latency.
-//
-// Benefit: Restricting speculative connections prevents the browser from
-// opening unnecessary TCP sockets for links the user only hovered over.
-///
-// Tradeoff: Increases perceived latency when a user clicks a link, as the
-// browser must perform the TCP handshake from scratch.
-user_pref("network.http.speculative-parallel-limit", 20);
+// Tradeoff: Navigating to a new page might feel a few milliseconds slower
+// because the TCP handshake only begins after you physically click the link.
+user_pref("network.http.speculative-parallel-limit", 0);
 
 // Increase the cache size for accelerated canvas items
 // These override current defaults of 8192 and 256 MiB respectively. Increasing
