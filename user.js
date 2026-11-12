@@ -164,9 +164,14 @@ user_pref("dom.webnotifications.enabled", false);
 user_pref("dom.webnotifications.serviceworker.enabled", false);
 user_pref("dom.push.enabled", false);
 
-// Suppress Firefox's DRM notifications, including the "You must enable DRM"
-// banner shown when a page requests protected media. This preference controls
-// the browser interface. Playback is configured separately.
+// UI: Disable displaying:
+// "You must enable DRM to play some audio or video on this page."
+//
+// Benefit: Prevents annoying DRM warning banners from cluttering the top of the
+// screen when visiting media sites without DRM enabled.
+//
+// Tradeoff: Users may be confused as to why premium video content silently
+// fails to play.
 user_pref("browser.eme.ui.enabled", false);
 
 // Widevine is Google's software for playing copy-protected movies and music in
@@ -1073,16 +1078,6 @@ user_pref("browser.tabs.animate", false);
 // Tradeoff: The user loses the visual cue that a download has successfully
 // completed.
 user_pref("browser.download.animateNotifications", false);
-
-// UI: Disable displaying:
-// "You must enable DRM to play some audio or video on this page."
-//
-// Benefit: Prevents annoying DRM warning banners from cluttering the top of the
-// screen when visiting media sites without DRM enabled.
-//
-// Tradeoff: Users may be confused as to why premium video content silently
-// fails to play.
-user_pref("browser.eme.ui.enabled", true);
 
 // Disable the fullscreen warning timeout (default: 3000ms)
 //
