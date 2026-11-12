@@ -164,6 +164,20 @@ user_pref("dom.webnotifications.enabled", false);
 user_pref("dom.webnotifications.serviceworker.enabled", false);
 user_pref("dom.push.enabled", false);
 
+// Suppress Firefox's DRM notifications, including the "You must enable DRM"
+// banner shown when a page requests protected media. This preference controls
+// the browser interface. Playback is configured separately.
+user_pref("browser.eme.ui.enabled", false);
+
+// Widevine is Google's software for playing copy-protected movies and music in
+// browsers. It unlocks the audio or video after the streaming service grants
+// permission to play it. This setting hides Firefox prompts about Widevine.
+// user_pref("media.gmp-widevinecdm.visible", false);
+
+// Turn off Widevine in Firefox. Movies and songs that require Widevine will no
+// longer play. Audio and video that do not require it can still play.
+// user_pref("media.gmp-widevinecdm.enabled", false);
+
 // This preference sets the initial paint delay in milliseconds for Firefox's
 // rendering engine. It means Firefox will wait before starting to render the
 // content of a web page after receiving the first data from the server. A very
